@@ -1,10 +1,20 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+  - repo: https://github.com/ambv/black
+    rev: ''
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
+      - id: black
+        language_version: python3.12.1 
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: ''
+    hooks:
+      - id: flake8
+  - repo: https://github.com/pycqa/isort
+    rev: ''
+    hooks:
+      - id: isort
+  - repo: https://github.com/necaris/pre-commit-pyright
+    rev: ''
+    hooks:
+      - id: pyright
