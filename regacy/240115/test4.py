@@ -51,7 +51,3 @@ profile = driver.find_element(By.XPATH, '//*[@id="main_pack"]/section[1]/div[2]/
 
 #프로필을 텍스트로 변환하여 출력
 print(profile.text)
-    
-
-
-

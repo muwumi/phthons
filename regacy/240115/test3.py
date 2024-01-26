@@ -19,7 +19,7 @@ try :
 
     driver.get("https://news.naver.com/main/ranking/popularDay.naver")
     elems = driver.find_elements("class name", "rankingnews_box")
-    
+
     for elem in elems:
         name = elem.find_element("class name", "rankingnews_name")
         tex = elem.find_element("class name", "rankingnews_list")

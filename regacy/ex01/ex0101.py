@@ -9,7 +9,7 @@ kor = {
     "g": 67,
     "h": 52,
     "i": 97,
-    "j": 82 
+    "j": 82
 }
 
 math = {
@@ -22,7 +22,7 @@ math = {
     "g": 67,
     "h": 72,
     "i": 97,
-    "j": 82 
+    "j": 82
 }
 
 eng = {
@@ -35,7 +35,7 @@ eng = {
     "g": 67,
     "h": 12,
     "i": 97,
-    "j": 82 
+    "j": 82
 }
 subject = {'kor', 'math', 'eng'}
 
@@ -47,7 +47,7 @@ avgList = {}
 while i <  len(list(kor.keys())) :
     inputName = list(kor.keys())[i]
     total = kor[inputName] + math[inputName] + eng[inputName]
-    avg = round(total/len(subject)) 
+    avg = round(total/len(subject))
     totalList[inputName] = total
     avgList[inputName] = avg
     i = i+1
@@ -64,9 +64,7 @@ print("@@@@@@@콘솔 창에 원하는 사람의 이름을 입력하세요@@@@@@@
 targetName = input()
 resultJumsu = avgList.get(targetName)
 indexOfName = sortedList.index(resultJumsu)
-rank = (len(jList)-indexOfName) 
+rank = (len(jList)-indexOfName)
 print(str(targetName)+ "의 최종 등수 : ", str(rank)+'등', )
 print("총점 : ", totalList.get(targetName))
 print("평균 : ", avgList.get(targetName))
-
-

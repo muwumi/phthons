@@ -16,7 +16,7 @@ for i in range(endPage):
     print('=============={}연결테스트==============='.format(nowPage))
     print('nowPage ====>', nowPage)
     url = 'https://finance.naver.com/sise/sise_market_sum.naver?&page={}'.format(nowPage)
-    #url = f'https://finance.naver.com/sise/sise_market_sum.naver?&page={i}' 
+    #url = f'https://finance.naver.com/sise/sise_market_sum.naver?&page={i}'
     print('접속 url ===> ', url)
     resData = requests.get(url, headers=userAgent)
     #print(resData.status_code)
@@ -47,15 +47,5 @@ for i in range(endPage):
             dataList.append(colTxt)
         if int(dataList[0]) > dataNum :
             dataList.clear()
-        writer.writerow(dataList)    
+        writer.writerow(dataList)
         print(dataList)
-
-    
-    
-
-
-
-
-
-
-

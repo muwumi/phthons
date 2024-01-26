@@ -16,7 +16,7 @@ while start != "끝":
     dictSandS["eng"]=input()
     print("수학 점수를 입력해주세요")
     dictSandS["math"]=input()
-    
+
     #받은 데이터로 딕셔너리 만들기
     subject =  list(dictSandS.keys())
     information={"NAME" : name, "SCORE" : dictSandS}
@@ -24,11 +24,11 @@ while start != "끝":
     dictMap[(k)]=information
     print(dictMap)
 
-    
+
     print("끝????")
     start = input()
     k=k+1
-    
+
 
 i=0
 total = 0
@@ -38,7 +38,7 @@ while i<len(subject):
     total = int( dictSandS.get(subject[i]) )  + total
     i = i+1
 print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
-length = len(list(dictSandS.keys())) 
+length = len(list(dictSandS.keys()))
 avg = round( total/length )
 information.get("SCORE")["total"]=total
 information.get("SCORE")["avg"]=avg

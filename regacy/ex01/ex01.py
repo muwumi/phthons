@@ -9,7 +9,7 @@ jumsu = {
          "g": 67,
          "h": 52,
          "i": 97,
-         "j": 82 
+         "j": 82
         }
 print("점수데이터",jumsu)
 
@@ -43,4 +43,3 @@ while i < len(jumsuSorted):
 print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV 이름을 입력하세요")
 targetName = input()
 print(result.get(targetName),"등")
-

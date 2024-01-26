@@ -7,6 +7,6 @@ k = p.match('yangdoll')
 #$ => 끝
 
 print(type(p),'@@@@@@@@@' ,p)
-print(type(k), '         $$$       ', k) 
+print(type(k), '         $$$       ', k)
 print(k.group()) #정규식에 맞는 단어를 출력
 print(k.string) #정규식에서 테스트되는 기준의 단어 출력(yangdoll)

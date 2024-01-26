@@ -14,7 +14,7 @@ options.add_experimental_option("excludeSwitches",["enable-logging"])
 #wb는 webdriver
 
 browser = webdriver.Chrome(options=options)
-#쿠팡 크롤링 차단되었을 때 
+#쿠팡 크롤링 차단되었을 때
 browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
 
 browser.get("https://www.coupang.com/")

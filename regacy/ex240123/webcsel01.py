@@ -27,7 +27,7 @@ browser.find_element(By.XPATH,'//*[@id="searchSortingOrder"]/ul/li[2]/label').cl
 titles = []
 prices = []
 ar_dates = []
-# 반복문이 들어간다.n페이지만큼 
+# 반복문이 들어간다.n페이지만큼
 url = 'https://www.coupang.com/np/search?q=%EA%B3%A0%EA%B5%AC%EB%A7%88&channel=user&component=&eventCategory=SRP&trcid=&traid=&sorter=salePriceAsc&minPrice=&maxPrice=&priceRange=&filterType=&listSize=36&filter=&isPriceRange=false&brand=&offerCondition=&rating=0&page=1&rocketAll=false&searchIndexingToken=&backgroundColor='
 
 browser.get(url)

@@ -115,7 +115,7 @@ sheet = workbook['Sheet1']
     #입력하기
 #sheet['A1'] = dataDict.keys[1]
 keys = list(dataDict.keys())
-values = list( dataDict.values()) 
+values = list( dataDict.values())
 type = type(values)
 
 print(type)

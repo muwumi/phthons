@@ -28,4 +28,3 @@ priceList = soup.find_all('span', attrs={'class' : 'price_num__S2p_v'})
 for i in range(len(priceList)):
     price = (priceList[i].em).text
     print('price'+str(i)+' =====>', price)
-
