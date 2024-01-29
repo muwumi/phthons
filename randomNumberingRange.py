@@ -3,9 +3,9 @@ from datetime import datetime
 
 def downFx(ranNum, a, b) :
     result = ranNum/3
-    if result <= b:
+    if a<= result <= b:
         return str(result).split('.')[0]
-    elif result > b:
+    else :
         return downFx(result, a, b)
 
 def upFx(ranNum, a, b) : 
@@ -25,7 +25,7 @@ def randomFunction(a: int, b: int):
         return downFx(ranNum, a, b)
     elif (a < ranNum < b) :
         return ranNum
-    else :
+    elif ranNum < a:
         return upFx(ranNum, a, b)
 
 print('범위 설정에 들어갑니다.')
