@@ -45,7 +45,8 @@ for i in range(endPage):
         for colum in colums :
             colTxt = colum.get_text().strip()
             dataList.append(colTxt)
+        #원하는 데이터 갯수 초과시 클리어
         if int(dataList[0]) > dataNum :
             dataList.clear()
-        writer.writerow(dataList)
-        print(dataList)
+        writer.writerow(dataList[int(i)-1])
+    print(dataList)
