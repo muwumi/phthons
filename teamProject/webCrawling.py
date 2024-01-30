@@ -27,14 +27,24 @@ browser.page_source
 time.sleep(1)
 
 #스크롤 끝까지 내리기
-def scrollDownMax(a : int):
-    for i in range(a):
-        # 대기 시간 추가
-        time.sleep(1/4)
-        # 스크롤 명령을 WebDriverWait로 감싸기, end키를 활용하여 body태그가 나올 때까지 기다리기
-        wait = WebDriverWait(browser, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body'))).send_keys(Keys.END)
-scrollDownMax(10)
+def scrollDownMax():
+    last_height = browser.execute_script("return document.documentElement.scrollHeight")
+    while True :
+        #스크롤 끝까지 내리기
+        browser.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
+        print("Scrolled!")
+        #스크롤 내린 후 페이지 로딩 시간 필요
+        time.sleep(1)
+
+        #스크롤 내린 후 페이지 높이
+        new_height = browser.execute_script("return document.documentElement.scrollHeight")
+        
+        #더이상 스크롤이 내려가지 않을 때 까지 스크롤 내리는 반복문 멈추기
+        if new_height == last_height :
+            break
+        #스크롤 내린 후 페이지 높이를 현재 페이지 높이 변수에 저장
+        last_height = new_height
+scrollDownMax()
 
 #카테고리
     #카테고리 마저도 자동화 가능
@@ -66,7 +76,7 @@ time.sleep(1)
 print('===================================browser===================================')
 print('현재url : ', browser.current_url)
 print('잠시 대기')
-scrollDownMax(10)
+scrollDownMax()
 
 #제목, 가격, 연도, 등수 추출
     #자료개수와 페이지 수
@@ -76,7 +86,9 @@ dataNum = int(input())
 endPage = math.ceil(dataNum/40)
     #엑셀열기
     # 슬래쉬를 경로로 인식하는 문제를 해결하기 위해 r과 replace함수 사용
-f = open(r'{}{}개.csv'.format(inputCategory.replace('/', '_'), dataNum), 'w', encoding='UTF-8-sig', newline='')
+fPath = r'D:\LSH\workspace\phthons\teamProject'
+fName = r'\{}{}개.csv'.format(inputCategory, dataNum).replace('/', '')
+f = open(fPath+fName, 'w', encoding='UTF-8-sig', newline='')
 writer = csv.writer(f, delimiter=',')
     #엑셀에 컬럼입력하기
 colList = '제목, 가격, 연도, 등수'.split(', ')
@@ -122,4 +134,4 @@ for i in range(1, endPage+1):
     nexUrl = getUrl = getUrlExcPage+'&pageIndex={}&pageSize=40'.format(i+1)
     browser.get(getUrl)
     #스크롤 내리기
-    scrollDownMax(10)
+    scrollDownMax()
