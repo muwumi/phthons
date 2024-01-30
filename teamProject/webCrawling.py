@@ -24,20 +24,26 @@ browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ 
 #사이트 연결
 browser.get('https://search.shopping.naver.com/book/home')
 browser.page_source
-time.sleep(2)
+time.sleep(1)
 
 #스크롤 끝까지 내리기
-for i in range(10):
-    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(1/2)
+def scrollDownMax(a : int):
+    for i in range(a):
+        # 대기 시간 추가
+        time.sleep(1/4)
+        # 스크롤 명령을 WebDriverWait로 감싸기, end키를 활용하여 body태그가 나올 때까지 기다리기
+        wait = WebDriverWait(browser, 10)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body'))).send_keys(Keys.END)
+scrollDownMax(10)
 
 #카테고리
     #카테고리 마저도 자동화 가능
 elem = browser.find_element(By.CLASS_NAME, 'category_list_category__DqGyx')
 categorylist = elem.text.split('\n')
+print('_'*30,'이하 카테고리 목럭입니다.', '_'*30)
 print(categorylist)
-print('W'*60)
-print('원하는 카테고리를 위의 카테고리 종류를 참조하여 입력해주세요(복사붙여넣기)')
+print('_'*80)
+print('원하는 카테고리를 <<위의 카테고리 종류>>를 참조하여 입력해주세요(복사붙여넣기)')
 inputCategory = input()
 xpathIdx = int(categorylist.index(inputCategory))+1
 print('xpathIdx===>', xpathIdx)
@@ -46,45 +52,31 @@ print('xpath====>', xpath)
     #elem 덮어쓰기
 elem = browser.find_element(By.XPATH, xpath)
 getUrlExcPage = elem.get_attribute('href')
-print('================>', getUrlExcPage, type(getUrlExcPage))
-# print('getUrl =======>', getUrl)
-# print(type(getUrl))
-#그냥 클릭하면 새로운 탭으로 연결됨. 이는 브라우저의 url을 변동시키지 못함.
+    #그냥 클릭하면 새로운 탭으로 연결되기 때문에 href 속성 값을 전부 변경 시킴
 browser.execute_script('''
     var elements = document.querySelectorAll(".category_link_category__XlcyC");
     elements.forEach(function(element) {
         element.setAttribute("target", "_self");
     });
 ''')
-time.sleep(2)
-elem.click()
-time.sleep(2)
-browser.refresh()
 time.sleep(1)
-print('W'*100) 
-# 스크롤 끝까지 내리기
+elem.click()
+time.sleep(1)
+    #클릭 이후에 기존 탭에서 카테고리 창이 열렸는지 확인
 print('===================================browser===================================')
-print(browser, type(browser))
-print('현재url', browser.current_url)
+print('현재url : ', browser.current_url)
 print('잠시 대기')
-for i in range(10):
-    # 대기 시간 추가
-    time.sleep(1/4)
-    
-    # 스크롤 명령을 WebDriverWait로 감싸기, end키를 활용하여 body태그가 나올 때까지 기다리기
-    wait = WebDriverWait(browser, 10)
-    wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body'))).send_keys(Keys.END)
-
-
+scrollDownMax(10)
 
 #제목, 가격, 연도, 등수 추출
     #자료개수와 페이지 수
-dataResult2D = []
+dataResult2D = []#최종적으로 사용할 데이터 그릇(2차원 배열)
 print('='*50,'원하는 데이터의 갯수를 입력해주세요', '='*50)
 dataNum = int(input())
 endPage = math.ceil(dataNum/40)
     #엑셀열기
-f = open(('{}{}개.csv'.format(inputCategory, dataNum)), 'w', encoding='UTF-8-sig', newline='')
+    # 슬래쉬를 경로로 인식하는 문제를 해결하기 위해 r과 replace함수 사용
+f = open(r'{}{}개.csv'.format(inputCategory.replace('/', '_'), dataNum), 'w', encoding='UTF-8-sig', newline='')
 writer = csv.writer(f, delimiter=',')
     #엑셀에 컬럼입력하기
 colList = '제목, 가격, 연도, 등수'.split(', ')
@@ -97,39 +89,37 @@ for i in range(1, endPage+1):
     userAgent = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
     resData = requests.get(getUrl, headers=userAgent)
     if resData.status_code == requests.codes.OK :
-        print('page{} 접속URL=====>[  {}  ]에 접속완료 '.format(i, getUrl))
+        print('{}page 접속URL=====>[  {}  ]에 접속완료 '.format(i, getUrl))
     else :
         print('권한이 없어 접속에 실패하였습니다.')
             
-            #데이터 가져오기
+            #데이터 가져오기(pagesize는 변경 불가 : 40)
     for j in range (1, 40+1):
-        print('============@@@@@@@=====>>>>>>>>{}번째'.format(j))
         elem = browser.find_element(By.XPATH, '//*[@id="book_list"]/ul/li[{}]'.format(j))
         title = elem.find_elements(By.CSS_SELECTOR, '.bookListItem_title__X7f9_')
         price = elem.find_elements(By.CSS_SELECTOR, '.bookPrice_price__zr5dh>em')
         date = elem.find_elements(By.CLASS_NAME, 'bookListItem_detail_date___byvG')
         rank = elem.find_elements(By.CSS_SELECTOR, '.bookListItem_feature__txTlp')
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@'*6)
-        dataList1D = []
-        if(len(dataResult2D)<dataNum):
+        print('________________'*10)
+        dataList1D = []#2D그릇에 넣을 1D 데이터, 매번 초기화해야 하기 때문에 for문 안에 넣기
+        if(len(dataResult2D)<dataNum): #'='을 넣으면 마지막에 하나더 삽입 됨
             dataList1D.append(title[0].text)
             dataList1D.append(price[0].text)
             dataList1D.append(date[0].text)
-            dataList1D.append(rank[0].text)
+            if (len(rank)!=0):
+                dataList1D.append(rank[0].text)
+            else :
+                dataList1D.append(' ')            
             dataResult2D.append(dataList1D)
             writer.writerow(dataResult2D[int(j)-1])
             print('dataList ===>', dataList1D)
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',len(dataResult2D), dataNum )
+            print('>>>>>>>삽입한 개수 {}>>>>>>목표 개수 {}>>>>>>>'.format(len(dataResult2D), dataNum) )                
         else :
+            print('--------------입력이 완료되었습니다.----------------')
             break
         
     #다음 페이지로 넘어가기
     nexUrl = getUrl = getUrlExcPage+'&pageIndex={}&pageSize=40'.format(i+1)
     browser.get(getUrl)
     #스크롤 내리기
-    for k in range(10):
-    # 대기 시간 추가
-        time.sleep(1/4)
-        # 스크롤 명령을 WebDriverWait로 감싸기, end키를 활용하여 body태그가 나올 때까지 기다리기
-        wait = WebDriverWait(browser, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body'))).send_keys(Keys.END)
+    scrollDownMax(10)
