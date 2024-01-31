@@ -94,7 +94,7 @@ fName = r'\{}{}개.csv'.format(inputCategory, dataNum).replace('/', '')
 f = open(fPath+fName, 'w', encoding='UTF-8-sig', newline='')
 writer = csv.writer(f, delimiter=',')
     #엑셀에 컬럼입력하기
-colList = '제목, 가격, 연도, 등수'.split(', ')
+colList = '제목, 가격, e북가격, 연도, 등수'.split(', ')
 writer.writerow(colList)
 
     #1-endpage 반복
@@ -113,6 +113,7 @@ for i in range(1, endPage+1):
         elem = browser.find_element(By.XPATH, '//*[@id="book_list"]/ul/li[{}]'.format(j))
         title = elem.find_elements(By.CSS_SELECTOR, '.bookListItem_title__X7f9_')
         price = elem.find_elements(By.CSS_SELECTOR, '.bookPrice_price__zr5dh>em')
+        ePrice = elem.find_elements(By.CSS_SELECTOR, '.bookListItem_sub_info__AfkOO em')
         date = elem.find_elements(By.CLASS_NAME, 'bookListItem_detail_date___byvG')
         rank = elem.find_elements(By.CSS_SELECTOR, '.bookListItem_feature__txTlp')
         print('________________'*10)
@@ -120,6 +121,10 @@ for i in range(1, endPage+1):
         if(len(dataResult2D)<dataNum): #'='을 넣으면 마지막에 하나더 삽입 됨
             dataList1D.append(title[0].text)
             dataList1D.append(price[0].text)
+            if(len(ePrice)==2):
+                dataList1D.append(ePrice[1].text)
+            else :
+                dataList1D.append(' ') 
             dataList1D.append(date[0].text)
             if (len(rank)!=0):
                 dataList1D.append(rank[0].text)
