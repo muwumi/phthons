@@ -1,4 +1,4 @@
-import os, sys, time, csv, requests, math
+import os, sys, time, csv, requests, math, pyperclip
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -25,6 +25,7 @@ browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ 
 browser.get('https://search.shopping.naver.com/book/home')
 browser.page_source
 time.sleep(1)
+
 
 #스크롤 끝까지 내리기
 def scrollDownMax():
