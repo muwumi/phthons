@@ -58,12 +58,19 @@ print(categorylist)
 print('_'*80)
 print('원하는 카테고리를 <<위의 카테고리 종류>>를 참조하여 입력해주세요(복사붙여넣기)')
 inputCategory = input()
+div = browser.find_elements(By.CLASS_NAME, 'bookCard_card_wrap__Tx4e0')
+divIdx = int(len(div))
+print('보세요~~~~~~~~~~~divIdx ==================>', divIdx)
 xpathIdx = int(categorylist.index(inputCategory))+1
 print('xpathIdx===>', xpathIdx)
-xpath = '//*[@id="container"]/div/div[11]/div/ul/li[{}]/a'.format(xpathIdx)
+xpath = '//*[@id="container"]/div/div[{}]/div/ul/li[{}]/a'.format(divIdx, xpathIdx)
 print('xpath====>', xpath)
     #elem 덮어쓰기
-elem = browser.find_element(By.XPATH, xpath)
+time.sleep(1)
+wait = WebDriverWait(browser, 20)
+elem = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+#elem = browser.find_element(By.XPATH, xpath)
+time.sleep(3/2)
 getUrlExcPage = elem.get_attribute('href')
     #그냥 클릭하면 새로운 탭으로 연결되기 때문에 href 속성 값을 전부 변경 시킴
 browser.execute_script('''
@@ -195,13 +202,13 @@ time.sleep(2)
 print('================메일쓰기 버튼 눌렀음================')
     #메일작성
         #받는 사람
-recipAdr = 'tkdgjs9528@naver.com'
+recipAdr = 'tkdgjs9528@naver.com' #input으로 대체 가능
 recipInputElem = browser.find_element(By.ID, 'recipient_input_element')
 recipInputElem.click()
 recipInputElem.send_keys(recipAdr)
 print('='*20, '받는사람', '='*20)
         #제목
-title = '타이틀 input'
+title = '{} 파일 전송'.format(fName)
 titleInputElem = browser.find_element(By.ID, 'subject_title')
 titleInputElem.click()
 titleInputElem.send_keys(title)
