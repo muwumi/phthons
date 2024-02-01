@@ -1,3 +1,4 @@
+from io import BytesIO
 import os, sys, time, csv, requests, math, pyperclip, pandas, seaborn, matplotlib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -13,7 +14,10 @@ from openpyxl import Workbook
 from openpyxl.drawing.image import Image
 import openpyxl
 from openpyxl.drawing.image import Image
-
+import os 
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
+''''''
 #옵션설정
 options = Options()
     #최대 화면 조건
@@ -165,53 +169,3 @@ for i in range(1, endPage+1):
 #파일 저장
 f.close()
 print('='*30, 'csv파일 저장', '='*30)
-
-#csv 읽어오고 데이터 가져오기
-    #csv 읽기
-csvPath = 'D:\\LSH\\workspace\\phthons\\teamProject\\{}'.format(fName)
-csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
-print(csvDataFrame)
-print(type(csvDataFrame))
-    #데이터 컨트롤
-bTitle = csvDataFrame.loc[0 : , ['제목']]
-price = csvDataFrame.loc[0 : , ['가격']]
-ePrice = csvDataFrame.loc[0 : , ['e북가격']]
-rank = csvDataFrame.loc[0 : , ['등수']]
-bTitleList2D = bTitle.values.tolist()
-priceList2D = price.values.tolist()
-ePriceList2D = ePrice.values.tolist()
-rankList2D = rank.values.tolist()
-
-    #2차원 배열 형식이기에 별도로 가공해줘야함
-bTitleList = []
-priceList = []
-ePriceList = []
-rankList = []
-for i in range(len(priceList2D)):
-    #e북 가격이 없는 경우 별도로 처리를 해줘야함
-    if(ePriceList2D[i][0]!=' '):
-        bTitleList.append(bTitleList2D[i][0])
-        priceList.append(int(priceList2D[i][0]))
-        ePriceList.append(int(ePriceList2D[i][0]))
-        rankList.append(int(rankList2D[i][0].split(' ')[1].replace('위', '')))
-
-print('='*50, 'bTitleList')
-print(bTitleList)    
-print('='*50, 'priceList')
-print(priceList)
-print('='*50, 'ePriceList')
-print(ePriceList)
-print('='*50, 'rankList')
-print(rankList)
-
-#그래프 그려보기
-    # 비율 데이터 생성
-rate = []
-for i in range(len(priceList)):
-    rate.append(int(ePriceList[i])/int(priceList[i]))
-print(print)
-    #그래프 그리기
-plt.scatter(bTitleList, rate, s=5)
-
-#csv파일을 엑셀파일로 변환
-csvDataFrame.to_excel(fPath+fName.split('.')[0]+'.xlsx' , index=True)
