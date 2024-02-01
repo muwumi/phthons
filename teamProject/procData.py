@@ -19,6 +19,7 @@ priceList = []
 ePriceList = []
 rankList = []
 for i in range(len(priceList2D)):
+    #e북 가격이 없는 경우 별도로 처리를 해줘야함
     if(ePriceList2D[i][0]!=' '):
         priceList.append(int(priceList2D[i][0].replace(',', '')))
         ePriceList.append(int(ePriceList2D[i][0].replace(',', '')))
@@ -77,8 +78,8 @@ plt.hist(z, label='ebook-price', color='yellow')
 
 plt.scatter(x, rate)
 plt.title('ebookPrice/paperPrice')
-plt.xlabel('paper - price')
-plt.ylabel('rate')
+plt.xlabel('paper book price')
+plt.ylabel('rate(ebook/paper)')
 plt.xlim(minX-100, maxX+100)
 plt.ylim(0, 1)
 
