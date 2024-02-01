@@ -7,8 +7,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas, os, sys, seaborn, matplotlib, csv, numpy
+from matplotlib import font_manager, rc
 import matplotlib.pyplot as plt
-
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
+import openpyxl
+from openpyxl.drawing.image import Image
 
 #옵션설정
 options = Options()
@@ -99,8 +103,8 @@ dataNum = int(input())
 endPage = math.ceil(dataNum/40)
     #엑셀열기
     # 슬래쉬를 경로로 인식하는 문제를 해결하기 위해 r과 replace함수 사용
-fPath = r'D:\LSH\workspace\phthons\teamProject'
-fName = r'\{}{}개.csv'.format(inputCategory, dataNum).replace('/', '')
+fPath = 'D:\\LSH\\workspace\\phthons\\teamProject\\'
+fName = '{}{}개.csv'.format(inputCategory, dataNum).replace('/', '')
 f = open(fPath+fName, 'w', encoding='UTF-8-sig', newline='')
 writer = csv.writer(f, delimiter=',')
     #엑셀에 컬럼입력하기
@@ -132,7 +136,11 @@ for i in range(1, endPage+1):
             dataList1D.append(title[0].text)
             dataList1D.append(price[0].text.replace(',', ''))
             if(len(ePrice)==2):
-                dataList1D.append(ePrice[1].text.replace(',', ''))
+                if ePrice[1].text == '무료':
+                    ePrice[1] = 0
+                    dataList1D.append(ePrice[1])
+                else :
+                    dataList1D.append(ePrice[1].text.replace(',', ''))
             else :
                 dataList1D.append(' ') 
             dataList1D.append(date[0].text)
@@ -158,119 +166,9 @@ for i in range(1, endPage+1):
 f.close()
 print('='*30, 'csv파일 저장', '='*30)
 
-    #이메일 보내기
-    #네이버에 접속
-browser.get('https://www.naver.com/')
-browser.page_source
-time.sleep(1)
-
-    #로그인
-elem = browser.find_element(By.CSS_SELECTOR, '.MyView-module__link_login___HpHMW')
-time.sleep(1/2)
-elem.click()
-time.sleep(3/2)
-    #아이디 비번 입력
-print('아이디 입력')
-myId = 'tkdgjs9528' #input()으로 변경
-print('비번 입력')
-myPwd = 'Nhalfturn0*' #input()으로 변경
-pyperclip.copy(myId)
-browser.find_element(By.ID,'id').send_keys('xcv')
-browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)
-time.sleep(1)
-browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)
-time.sleep(1/2)
-browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)
-time.sleep(3/2)
-browser.find_element(By.ID,'id').send_keys(Keys.CONTROL,'v')
-pyperclip.copy(myPwd)
-time.sleep(2)
-browser.find_element(By.ID,'pw').send_keys(Keys.CONTROL,'v')
-browser.find_element(By.ID,'log.login').click()
-curUrl = browser.current_url
-if curUrl == 'https://www.naver.com/':
-    print('curUrl=========>', curUrl)
-    print('=====================로그인이 되었습니다======================')
-    #메일보내기 페이지
-browser.get('https://mail.naver.com/')
-curUrl = browser.current_url
-if curUrl == 'https://mail.naver.com/':
-    print('curUrl=========>', curUrl)
-    print('=====================메일 보내기 창으로 갔습니다======================')
-    time.sleep(3/2)
-    #새로운 메일 쓰기 버튼 누르기
-writeBtn = browser.find_element(By.XPATH, '//*[@id="root"]/div/nav/div/div[1]/div[2]/a[1]')
-writeBtn.click()
-time.sleep(2)
-print('================메일쓰기 버튼 눌렀음================')
-    #메일작성
-        #받는 사람
-recipAdr = 'tkdgjs9528@naver.com' #input으로 대체 가능
-recipInputElem = browser.find_element(By.ID, 'recipient_input_element')
-recipInputElem.click()
-recipInputElem.send_keys(recipAdr)
-print('='*20, '받는사람', '='*20)
-        #제목
-title = '{} 파일 전송'.format(fName)
-titleInputElem = browser.find_element(By.ID, 'subject_title')
-titleInputElem.click()
-titleInputElem.send_keys(title)
-print('='*20, '제목', '='*20)
-        #첨부파일
-            # 파일 업로드
-file_input = browser.find_element(By.ID, 'ATTACH_LOCAL_FILE_ELEMENT_ID')
-file_input.send_keys(os.path.abspath(fPath+fName))
-
-            # 첨부한 파일이 업로드될 때까지 대기
-wait = WebDriverWait(browser, 10)
-wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'file_upload_progress')))
-print('='*20, '첨부파일', '='*20)
-'''
-        #내용작성
-conInput = '임시로 내용을 작성해 봅니다'
-conBox = browser.find_element(By.ID, 'sender_input')
-conBox.send_keys(conInput)
-time.sleep(2)
-print('='*20, '내용', '='*20)
-'''
-        #전송버튼
-browser.find_element(By.CLASS_NAME, 'button_write_task').click()
-print('='*20, '전송하기', '='*20)
-
 #csv 읽어오고 데이터 가져오기
     #csv 읽기
-csvPath = r'D:\LSH\workspace\phthons\teamProject\{}'.format(fName)
-csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
-print(csvDataFrame)
-print(type(csvDataFrame))
-    #데이터 컨트롤
-price = csvDataFrame.loc[0 : , ['가격']]
-ePrice = csvDataFrame.loc[0 : , ['e북가격']]
-rank = csvDataFrame.loc[0 : , ['등수']]
-priceList2D = price.values.tolist()
-ePriceList2D = ePrice.values.tolist()
-rankList2D = rank.values.tolist()
-
-priceList = []
-ePriceList = []
-rankList = []
-for i in range(len(priceList2D)):
-    #e북 가격이 없는 경우 별도로 처리를 해줘야함
-    if(ePriceList2D[i][0]!=' '):
-        priceList.append(int(priceList2D[i][0]))
-        ePriceList.append(int(ePriceList2D[i][0]))
-        rankList.append(int(rankList2D[i][0].split(' ')[1].replace('위', '')))
-    
-print('='*50, 'priceList')
-print(priceList)
-print('='*50, 'ePriceList')
-print(ePriceList)
-print('='*50, 'rankList')
-print(rankList)
-
-#csv 읽어오고 데이터 가져오기
-    #csv 읽기
-csvPath = r'D:\LSH\workspace\phthons\teamProject{}'.format(fName)
+csvPath = 'D:\\LSH\\workspace\\phthons\\teamProject\\{}'.format(fName)
 csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
 print(csvDataFrame)
 print(type(csvDataFrame))
@@ -284,6 +182,7 @@ priceList2D = price.values.tolist()
 ePriceList2D = ePrice.values.tolist()
 rankList2D = rank.values.tolist()
 
+    #2차원 배열 형식이기에 별도로 가공해줘야함
 bTitleList = []
 priceList = []
 ePriceList = []
@@ -292,8 +191,8 @@ for i in range(len(priceList2D)):
     #e북 가격이 없는 경우 별도로 처리를 해줘야함
     if(ePriceList2D[i][0]!=' '):
         bTitleList.append(bTitleList2D[i][0])
-        priceList.append(int(priceList2D[i][0].replace(',', '')))
-        ePriceList.append(int(ePriceList2D[i][0].replace(',', '')))
+        priceList.append(int(priceList2D[i][0]))
+        ePriceList.append(int(ePriceList2D[i][0]))
         rankList.append(int(rankList2D[i][0].split(' ')[1].replace('위', '')))
 
 print('='*50, 'bTitleList')
@@ -306,39 +205,13 @@ print('='*50, 'rankList')
 print(rankList)
 
 #그래프 그려보기
-    #plt.plot([x값인자], [y값인자])
-    #데이터 정렬(가격)
-
-    # x, y 설정
-x = priceList
-y = rankList
-z = ePriceList
+    # 비율 데이터 생성
 rate = []
 for i in range(len(priceList)):
-    print(i)
-    rate.append(round(int(ePriceList[i])/int(priceList[i]), 3)) 
-print('=======>rate : {}, {}개'.format(rate, len(rate)))
+    rate.append(int(ePriceList[i])/int(priceList[i]))
+print(print)
+    #그래프 그리기
+plt.scatter(bTitleList, rate, s=5)
 
-sortedPriceList = sorted(priceList)
-maxX = sortedPriceList[len(priceList)-1]
-minX = sortedPriceList[0]
-print('=======>priceList : {}, {}'.format(priceList, len(priceList)))
-print('=======>epriceList : {}, {}'.format(ePriceList, len(ePriceList)))
-
-
-# 데이터 생성
-categories = []
-for i in range(len(priceList)):
-    strInput = '[{}] {}'.format(i, priceList[i])
-    categories.append(strInput)
-print(categories)
-plt.scatter(categories, rate, s=5)
-
-
-# 그래프에 제목과 축 레이블 추가
-plt.title('Sum of Paper Price, Ebook Price, and Rank')
-plt.xlabel('Categories')
-plt.ylabel('Values')
-
-# 그래프 표시
-plt.show()
+#csv파일을 엑셀파일로 변환
+csvDataFrame.to_excel(fPath+fName.split('.')[0]+'.xlsx' , index=True)

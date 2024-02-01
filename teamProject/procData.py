@@ -83,16 +83,42 @@ import matplotlib.pyplot as plt
 
 
 
-# DataFrame의 plot() 메서드를 사용하여 선 그래프 그리기
-csvDataFrame.plot(x='제목', y='가격', kind='line', marker='o', linestyle='-', color='blue', label='Line Plot')
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# 그래프에 제목과 축 레이블 추가
-plt.title('Line Plot using pandas')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
+# CSV 파일 경로 설정
 
-# 범례 추가
-plt.legend()
 
-# 그래프 표시
-plt.show()
+# CSV 파일 읽기
+df = pd.read_csv(csvPath)
+
+# 데이터 확인
+print(df)
+
+# 그래프 그리기
+plt.plot(df['X'], df['Y'], label='데이터1')
+plt.xlabel('X 축')
+plt.ylabel('Y 축')
+plt.title('그래프 제목')
+
+# 그래프를 그린 후 엑셀 파일에 삽입할 때 필요한 작업
+# - Matplotlib의 그래프를 이미지로 저장
+plt.savefig('graph.png')  # 이미지 파일 경로
+plt.close()
+
+# - 이미지를 엑셀 파일에 삽입
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
+
+wb = Workbook()
+ws = wb.active
+
+img = Image('graph.png')
+
+# 이미지를 삽입할 셀 위치 지정
+cell_position = 'A10'
+ws.add_image(img, cell_position)
+
+# 엑셀 파일 저장
+wb.save('output.xlsx')
+
