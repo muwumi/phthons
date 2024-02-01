@@ -84,7 +84,7 @@ plt.xlim(minX-100, maxX+100)
 plt.ylim(0, 1)
 
 # 범례 추가
-plt.legend()
+plt.legend('이렇게 해볼까')
 
 # 그래프 표시
 plt.show()
