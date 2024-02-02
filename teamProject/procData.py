@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from openpyxl import Workbook, load_workbook
 from openpyxl.drawing.image import Image
 import matplotlib.font_manager as fm
+import tkinter as tk
+from tkinter import ttk
 
 # 바탕글꼴 경로 설정
 font_path = 'C:/Windows/Fonts/batang.ttc'
@@ -14,7 +16,7 @@ font_name = fm.FontProperties(fname=font_path).get_name()
 plt.rc('font', family=font_name)
 
 # csv 읽어오고 데이터 가져오기
-csvPath = r'D:\LSH\workspace\phthons\teamProject\자기계발66개.csv'
+csvPath = r'D:\LSH\workspace\phthons\teamProject\자기계발55개.csv'
 csvDataFrame = pd.read_csv(csvPath, sep=',', encoding='utf-8-sig')
 
 # 데이터 컨트롤(제목, 가격, e북가격, 등수)
@@ -58,7 +60,7 @@ plt.savefig(graphFileName)
 plt.show()
 
 # 엑셀 파일로 변환
-excelPath = r'D:\LSH\workspace\phthons\teamProject\자기계발66개.xlsx'
+excelPath = r'D:\LSH\workspace\phthons\teamProject\자기계발55개.xlsx'
 csvDataFrame.to_excel(excelPath, index=False)
 
 # 엑셀 파일 읽어오기
@@ -73,5 +75,31 @@ image = Image(imgPath)
 position = 'K2'
 sheet.add_image(image, position)
 
-workbook.save('자기계발66개 그래프추가.xlsx')
+workbook.save('자기계발55개 그래프추가.xlsx')
 
+
+# Tkinter 창 생성
+window = tk.Tk()
+window.title("데이터프레임 뷰어")
+
+# 데이터프레임을 표시할 Treeview 위젯 생성
+tree = ttk.Treeview(window)
+tree["columns"] = tuple(csvDataFrame.columns)
+
+# 열 제목 설정
+for column in csvDataFrame.columns:
+    tree.heading(column, text=column)
+
+# Treeview에 데이터 삽입
+for index, row in csvDataFrame.iterrows():
+    tree.insert("", "end", values=tuple(row))
+
+# Treeview를 창에 적절히 배치
+tree.pack(expand=True, fill="both")
+
+# 행의 수를 보여줄 레이블 생성
+label = tk.Label(window, text=str(len(csvDataFrame)) + '개')
+label.pack()
+
+# Tkinter 이벤트 루프 실행
+window.mainloop()

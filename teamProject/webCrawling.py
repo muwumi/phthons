@@ -19,6 +19,8 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.drawing.image import Image
 import numpy
 import matplotlib.font_manager as fm
+import tkinter as tk
+from tkinter import ttk
 
 
 
