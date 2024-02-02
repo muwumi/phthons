@@ -1,5 +1,13 @@
 from io import BytesIO
-import os, sys, time, csv, requests, math, pyperclip, pandas, seaborn, matplotlib
+import math
+import os
+import time
+import csv
+import requests
+import pyperclip
+import pandas
+import seaborn
+import matplotlib.pyplot as plt
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -7,17 +15,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-import pandas, os, sys, seaborn, matplotlib, csv, numpy
-from matplotlib import font_manager, rc
-import matplotlib.pyplot as plt
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.drawing.image import Image
-import openpyxl
-from openpyxl.drawing.image import Image
-import os 
-from openpyxl import Workbook
-from openpyxl.drawing.image import Image
-''''''
+import numpy
+import matplotlib.font_manager as fm
+
+
+
+#----------------------------------------------------크롤링 작업--------------------------------------------------
 #옵션설정
 options = Options()
     #최대 화면 조건
@@ -80,7 +85,6 @@ print('xpath====>', xpath)
 time.sleep(1)
 wait = WebDriverWait(browser, 20)
 elem = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-#elem = browser.find_element(By.XPATH, xpath)
 time.sleep(3/2)
 getUrlExcPage = elem.get_attribute('href')
     #그냥 클릭하면 새로운 탭으로 연결되기 때문에 href 속성 값을 전부 변경 시킴
@@ -107,9 +111,9 @@ dataNum = int(input())
 endPage = math.ceil(dataNum/40)
     #엑셀열기
     # 슬래쉬를 경로로 인식하는 문제를 해결하기 위해 r과 replace함수 사용
-fPath = 'D:\\LSH\\workspace\\phthons\\teamProject\\'
-fName = '{}{}개.csv'.format(inputCategory, dataNum).replace('/', '')
-f = open(fPath+fName, 'w', encoding='UTF-8-sig', newline='')
+basePath = 'D:\\LSH\\workspace\\phthons\\teamProject\\'
+csvFileName = '{}{}개.csv'.format(inputCategory, dataNum).replace('/', '')
+f = open(basePath+csvFileName, 'w', encoding='UTF-8-sig', newline='')
 writer = csv.writer(f, delimiter=',')
     #엑셀에 컬럼입력하기
 colList = '제목, 가격, e북가격, 연도, 등수'.split(', ')
@@ -169,3 +173,141 @@ for i in range(1, endPage+1):
 #파일 저장
 f.close()
 print('='*30, 'csv파일 저장', '='*30)
+
+#----------------------------------------------------데이터 분석 작업--------------------------------------------------
+# 바탕글꼴 경로 설정
+font_path = 'C:/Windows/Fonts/batang.ttc'
+
+# 폰트 이름 가져오기
+font_name = fm.FontProperties(fname=font_path).get_name()
+
+# 폰트 설정
+plt.rc('font', family=font_name)
+
+# csv 읽어오고 데이터 가져오기
+csvPath = basePath + csvFileName
+csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
+
+# 데이터 컨트롤(제목, 가격, e북가격, 등수)
+bTitle = csvDataFrame.loc[:, ['제목']]
+price = csvDataFrame.loc[:, ['가격']]
+ePrice = csvDataFrame.loc[:, ['e북가격']]
+rank = csvDataFrame.loc[:, ['등수']]
+
+bTitleList = bTitle['제목'].tolist()
+priceList = price['가격'].tolist()  # 숫자로 변환
+ePriceList = ePrice['e북가격'].tolist()  # 숫자로 변환
+rankList = rank['등수'].str.replace('위', '').tolist()  # 숫자로 변환
+
+# 산포도 그리기
+plt.scatter(bTitleList, priceList)
+plt.title('Scatter')
+plt.xlabel('book-title')
+plt.ylabel('book-price')
+plt.xticks(rotation=90)  # X 축 라벨 회전
+plt.tight_layout()  # 레이아웃 조정
+graphFileName = '{}{}Graph.png'.format(inputCategory, dataNum)
+plt.savefig(graphFileName)
+plt.show()
+input("Press Enter to close the plot window.")
+plt.close()
+
+# 엑셀 파일로 변환
+excelFileName = '{}{}.xlsx'.format(inputCategory, dataNum)
+excelPath = basePath + excelFileName
+csvDataFrame.to_excel(excelPath, index=False)
+
+# 엑셀 파일 읽어오기
+workbook = load_workbook(excelPath)
+sheet = workbook.active
+
+# 이미지 파일 불러오기
+graphPath = basePath + graphFileName
+image = Image(graphPath)
+
+# 이미지 삽입할 위치 지정
+position = 'A{}'.format(dataNum+3)
+sheet.add_image(image, position)
+excelFileNameWithGraph = '{}{}with{}.xlsx'.format(inputCategory, dataNum, graphFileName.split('.')[0])
+workbook.save(excelFileNameWithGraph)
+
+#----------------------------------------------------이메일 보내기--------------------------------------------------
+    #이메일 보내기
+    #네이버에 접속
+browser.get('https://www.naver.com/')
+browser.page_source
+time.sleep(1)
+
+    #로그인
+elem = browser.find_element(By.CSS_SELECTOR, '.MyView-module__link_login___HpHMW')
+time.sleep(1/2)
+elem.click()
+time.sleep(3/2)
+    #아이디 비번 입력
+print('아이디 입력')
+myId = 'tkdgjs9528' #input()으로 변경
+print('비번 입력')
+myPwd = 'Nhalfturn0*' #input()으로 변경
+pyperclip.copy(myId)
+browser.find_element(By.ID,'id').send_keys('xcv')
+browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)
+time.sleep(1)
+browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)
+time.sleep(1/2)
+browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)
+time.sleep(3/2)
+browser.find_element(By.ID,'id').send_keys(Keys.CONTROL,'v')
+pyperclip.copy(myPwd)
+time.sleep(2)
+browser.find_element(By.ID,'pw').send_keys(Keys.CONTROL,'v')
+browser.find_element(By.ID,'log.login').click()
+curUrl = browser.current_url
+if curUrl == 'https://www.naver.com/':
+    print('curUrl=========>', curUrl)
+    print('=====================로그인이 되었습니다======================')
+    #메일보내기 페이지
+browser.get('https://mail.naver.com/')
+curUrl = browser.current_url
+if curUrl == 'https://mail.naver.com/':
+    print('curUrl=========>', curUrl)
+    print('=====================메일 보내기 창으로 갔습니다======================')
+    time.sleep(3/2)
+    #새로운 메일 쓰기 버튼 누르기
+writeBtn = browser.find_element(By.XPATH, '//*[@id="root"]/div/nav/div/div[1]/div[2]/a[1]')
+writeBtn.click()
+time.sleep(2)
+print('================메일쓰기 버튼 눌렀음================')
+    #메일작성
+        #받는 사람
+recipAdr = 'tkdgjs9528@naver.com' #input으로 대체 가능
+recipInputElem = browser.find_element(By.ID, 'recipient_input_element')
+recipInputElem.click()
+recipInputElem.send_keys(recipAdr)
+print('='*20, '받는사람', '='*20)
+        #제목
+title = '{} 파일 전송'.format(excelFileNameWithGraph)
+titleInputElem = browser.find_element(By.ID, 'subject_title')
+titleInputElem.click()
+titleInputElem.send_keys(title)
+print('='*20, '제목', '='*20)
+        #첨부파일
+            # 파일 업로드
+file_input = browser.find_element(By.ID, 'ATTACH_LOCAL_FILE_ELEMENT_ID')
+            #xlsx
+file_input.send_keys(os.path.abspath(basePath+excelFileNameWithGraph))
+
+            # 첨부한 파일이 업로드될 때까지 대기
+wait = WebDriverWait(browser, 10)
+wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'file_upload_progress')))
+print('='*20, '첨부파일', '='*20)
+'''
+        #내용작성
+conInput = '임시로 내용을 작성해 봅니다'
+conBox = browser.find_element(By.ID, 'sender_input')
+conBox.send_keys(conInput)
+time.sleep(2)
+print('='*20, '내용', '='*20)
+'''
+        #전송버튼
+browser.find_element(By.CLASS_NAME, 'button_write_task').click()
+print('='*20, '전송하기', '='*20)

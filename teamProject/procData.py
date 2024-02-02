@@ -14,9 +14,9 @@ ePrice = csvDataFrame.loc[:, ['e북가격']]
 rank = csvDataFrame.loc[:, ['등수']]
 
 bTitleList = bTitle['제목'].tolist()
-priceList = price['가격'].astype(float).tolist()  # 숫자로 변환
-ePriceList = ePrice['e북가격'].astype(float).tolist()  # 숫자로 변환
-rankList = rank['등수'].str.replace('위', '').astype(float).tolist()  # 숫자로 변환
+priceList = price['가격'].tolist()  # 숫자로 변환
+ePriceList = ePrice['e북가격'].tolist()  # 숫자로 변환
+rankList = rank['등수'].str.replace('위', '').tolist()  # 숫자로 변환
 
 # 산포도 그리기
 plt.scatter(bTitleList, priceList)
@@ -25,16 +25,20 @@ plt.xlabel('book-title')
 plt.ylabel('book-price')
 plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
-plt.savefig('graph.png')
+graphFileName = '{}.png'.format('임시 그래프')
+plt.savefig(graphFileName)
 plt.show()
 
+# 엑셀 파일로 변환
+excelPath = r'D:\LSH\workspace\phthons\teamProject\소설22개.xlsx'
+csvDataFrame.to_excel(excelPath, index=False)
+
 # 엑셀 파일 읽어오기
-filePath = r'D:\LSH\workspace\phthons\teamProject\소설22개.xlsx'
-workbook = load_workbook(filePath)
+workbook = load_workbook(excelPath)
 sheet = workbook.active
 
 # 이미지 파일 불러오기
-imgPath = r'D:\LSH\workspace\phthons\teamProject\graph.png'
+imgPath = r'D:\LSH\workspace\phthons\teamProject\{}'.format(graphFileName)
 image = Image(imgPath)
 
 # 이미지 삽입할 위치 지정
