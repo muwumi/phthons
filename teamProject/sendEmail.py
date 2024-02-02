@@ -1,3 +1,27 @@
+from io import BytesIO
+import math
+import os
+import time
+import csv
+import requests
+import pyperclip
+import pandas
+import seaborn
+import matplotlib.pyplot as plt
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+from openpyxl import Workbook, load_workbook
+from openpyxl.drawing.image import Image
+import numpy
+import matplotlib.font_manager as fm
+import tkinter as tk
+from tkinter import ttk
+
     #이메일 보내기
     #네이버에 접속
 browser.get('https://www.naver.com/')

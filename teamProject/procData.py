@@ -29,11 +29,6 @@ bTitleList = bTitle['제목'].tolist()
 priceList = price['가격'].tolist()  
 ePriceList = ePrice['e북가격'].tolist() 
 rankList = rank['등수'].str.replace('위', '').tolist()
-print(len(bTitleList))
-print(bTitleList)
-print(priceList)
-print(ePriceList)
-print(rankList)  
 
 
 #e북 가격 비율 만들기
@@ -46,7 +41,6 @@ for i in range(len(bTitle)):
         #ratio추출
         ratio = round(int(ePriceList[i])/int(priceList[i]), 3)
         ratioList.append(ratio)
-        
 
 # 산포도 그리기(e북가격비율)
 plt.scatter(bTitleWithEbook, ratioList)
@@ -55,9 +49,47 @@ plt.xlabel('book-title')
 plt.ylabel('ratio : ebook-price / paper-price')
 plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
-graphFileName = '{}.png'.format('임시 그래프')
+graphFileName = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
 plt.savefig(graphFileName)
 plt.show()
+plt.close()
+
+
+#----------------------------------책과 등수---------------------------
+print('====================================등수추출==================================')        
+#등수 추출
+print(len(bTitle))
+rankPureList = []
+bTitlePureList = []
+for i in range(len(bTitleList)):
+    #카테고리가 일치하지 않는 불순물 필터링
+    if ('자기계발' == rankList[i].split(' ')[0]):
+        rankPureList.append(int(rankList[i].split(' ')[1]))
+    #제목에서도 필터링
+        target = bTitleList[i]
+        bTitlePureList.append(target)
+print('====================================등수추출==================================')        
+plt.scatter(bTitlePureList, rankPureList)
+plt.xticks(rotation=90)  # X 축 라벨 회전
+plt.savefig('일치하는지 보자.png')
+plt.show()
+
+#--------------------------------가격과 등수---------------------------------
+rankPureList = []
+pricePureList = []
+for i in range(len(bTitleList)):
+    #카테고리가 일치하지 않는 불순물 필터링
+    if ('자기계발' == rankList[i].split(' ')[0]):
+        rankPureList.append(int(rankList[i].split(' ')[1]))
+    #제목에서도 필터링
+        target = priceList[i]
+        pricePureList.append(target)
+print('====================================등수추출==================================')        
+plt.scatter(pricePureList, rankPureList)
+plt.xticks(rotation=90)  # X 축 라벨 회전
+plt.savefig('일치하는지 보자2.png')
+plt.show()
+
 
 # 엑셀 파일로 변환
 excelPath = r'D:\LSH\workspace\phthons\teamProject\자기계발55개.xlsx'
@@ -77,7 +109,33 @@ sheet.add_image(image, position)
 
 workbook.save('자기계발55개 그래프추가.xlsx')
 
+'''
+#-----------------------------------------------데이터 색인-------------------------------------
+print('-'*50, '데이터 색인-------------------------------------')
+print('가격이 15000 이상인 데이터 찾기')
+#가격 1500원 이상 데이터 찾기
+price_up_5500 = csvDataFrame['가격'] >=15000
+subset_df = csvDataFrame[price_up_5500]
+print(subset_df)
+print('='*50)
+print('조건에 부합하는 데이터의 개수 : ', str(len(subset_df))+'개')
+# print(subset_df.head()) #상위 5개
 
+print('키워드 = 관계 데이터 찾기')
+#특정 단어 들어간 데이터 찾기
+containsword = csvDataFrame['제목'].str.contains("인간")
+subset_df = csvDataFrame[containsword]
+
+print('type(containsword)============>', type(containsword))
+print('type(subset_df)==============>', type(subset_df))
+
+print(subset_df)
+print('='*50)
+print(str(len(subset_df))+'개')
+
+'''
+'''
+#-----------------------------------------------트리뷰-----------------------------------------
 # Tkinter 창 생성
 window = tk.Tk()
 window.title("데이터프레임 뷰어")
@@ -103,3 +161,4 @@ label.pack()
 
 # Tkinter 이벤트 루프 실행
 window.mainloop()
+'''

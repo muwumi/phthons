@@ -199,7 +199,8 @@ rank = csvDataFrame.loc[:, ['등수']]
 bTitleList = bTitle['제목'].tolist()
 priceList = price['가격'].tolist()  
 ePriceList = ePrice['e북가격'].tolist() 
-rankList = rank['등수'].str.replace('위', '').tolist()  
+rankList = rank['등수'].str.replace('위', '').tolist()
+
 
 #e북 가격 비율 만들기
 ratioList = []
@@ -211,7 +212,6 @@ for i in range(len(bTitle)):
         #ratio추출
         ratio = round(int(ePriceList[i])/int(priceList[i]), 3)
         ratioList.append(ratio)
-        
 
 # 산포도 그리기(e북가격비율)
 plt.scatter(bTitleWithEbook, ratioList)
@@ -220,13 +220,54 @@ plt.xlabel('book-title')
 plt.ylabel('ratio : ebook-price / paper-price')
 plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
-graphFileName = '{}{}{}.png'.format(inputCategory, dataNum, 'e북 가격 비율')
+graphFileName = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
 plt.savefig(graphFileName)
 plt.show()
 plt.close()
 
+
+#----------------------------------책과 등수---------------------------       
+#등수 추출
+print(len(bTitle))
+rankPureList = []
+bTitlePureList = []
+for i in range(len(bTitleList)):
+    #카테고리가 일치하지 않는 불순물 필터링
+    if (inputCategory == rankList[i].split(' ')[0]):
+        rankPureList.append(int(rankList[i].split(' ')[1]))
+    #제목에서도 필터링
+        target = bTitleList[i]
+        bTitlePureList.append(target)
+print('====================================등수추출==================================')        
+plt.scatter(bTitlePureList, rankPureList)
+plt.xticks(rotation=90)  # X 축 라벨 회전
+graphFileName2 = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, '책과 등수')
+plt.savefig(graphFileName2)
+plt.show()
+plt.close()
+
+#--------------------------------가격과 등수---------------------------------
+rankPureList = []
+pricePureList = []
+for i in range(len(bTitleList)):
+    #카테고리가 일치하지 않는 불순물 필터링
+    if (inputCategory == rankList[i].split(' ')[0]):
+        rankPureList.append(int(rankList[i].split(' ')[1]))
+    #제목에서도 필터링
+        target = priceList[i]
+        pricePureList.append(target)
+print('====================================등수가 있는 가격 추출==================================')        
+plt.scatter(pricePureList, rankPureList)
+plt.xlabel('paper book price')
+plt.ylabel('ranking in category')
+plt.xticks(rotation=90)  # X 축 라벨 회전
+graphFileName3 = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, '가격과 등수')
+plt.savefig(graphFileName3)
+plt.show()
+plt.close()
+
 # 엑셀 파일로 변환
-excelFileName = '{}{}.xlsx'.format(inputCategory, dataNum)
+excelFileName = '{}{}.xlsx'.format(inputCategory.replace('/', ''), dataNum)
 excelPath = basePath + excelFileName
 csvDataFrame.to_excel(excelPath, index=False)
 
@@ -236,12 +277,20 @@ sheet = workbook.active
 
 # 이미지 파일 불러오기
 graphPath = basePath + graphFileName
-image = Image(graphPath)
+image1 = Image(graphPath)
+graphPath = basePath + graphFileName2
+image2 = Image(graphPath)
+graphPath = basePath + graphFileName3
+image3 = Image(graphPath)
 
 # 이미지 삽입할 위치 지정
-position = 'A{}'.format(dataNum+3)
-sheet.add_image(image, position)
-excelFileNameWithGraph = '{}{}with{}.xlsx'.format(inputCategory, dataNum, graphFileName.split('.')[0])
+position1 = 'A{}'.format(dataNum+3)
+sheet.add_image(image1, position1)
+position2 = 'A{}'.format(dataNum+33)
+sheet.add_image(image2, position2)
+position3 = 'A{}'.format(dataNum+73)
+sheet.add_image(image3, position3)
+excelFileNameWithGraph = '{}{}with{}.xlsx'.format(inputCategory.replace('/', ''), dataNum, graphFileName.split('.')[0])
 workbook.save(excelFileNameWithGraph)
 
 #----------------------------------------------------이메일 보내기--------------------------------------------------
@@ -313,14 +362,13 @@ file_input.send_keys(os.path.abspath(basePath+excelFileNameWithGraph))
 wait = WebDriverWait(browser, 10)
 wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'file_upload_progress')))
 print('='*20, '첨부파일', '='*20)
-'''
-        #내용작성
-conInput = '임시로 내용을 작성해 봅니다'
-conBox = browser.find_element(By.ID, 'sender_input')
-conBox.send_keys(conInput)
-time.sleep(2)
-print('='*20, '내용', '='*20)
-'''
+
+'''        #내용작성
+pyperclip.copy("내용을 담아봅시다람쥐")
+browser.find_element(By.CLASS_NAME, 'editor_body').click()
+time.sleep(1)
+browser.find_element(By.CLASS_NAME, 'editor_body').send_keys(Keys.CONTROL,'v')'''
+
         #전송버튼
 browser.find_element(By.CLASS_NAME, 'button_write_task').click()
 print('='*20, '전송하기', '='*20)
