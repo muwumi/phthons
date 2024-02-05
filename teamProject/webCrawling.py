@@ -289,7 +289,7 @@ for i in range(len(graphList)):
     newSheet.add_image(image , position)
 excelFileNameWithGraph = '{} {}with Graph.xlsx'.format(inputCategory.replace('/', ''), dataNum)
 workbook.save(excelFileNameWithGraph)
-'''
+
 #----------------------------------------------------이메일 보내기--------------------------------------------------
     #이메일 보내기
     #네이버에 접속
@@ -359,16 +359,14 @@ file_input.send_keys(os.path.abspath(basePath+excelFileNameWithGraph))
 wait = WebDriverWait(browser, 10)
 wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'file_upload_progress')))
 print('='*20, '첨부파일', '='*20)
-'''
+
 '''        #내용작성
 pyperclip.copy("내용을 담아봅시다람쥐")
 browser.find_element(By.CLASS_NAME, 'editor_body').click()
 time.sleep(1)
-browser.find_element(By.CLASS_NAME, 'editor_body').send_keys(Keys.CONTROL,'v')'''
+browser.find_element(By.CLASS_NAME, 'editor_body').send_keys(Keys.CONTROL,'v')
 '''
-
-
         #전송버튼
 browser.find_element(By.CLASS_NAME, 'button_write_task').click()
 print('='*20, '전송하기', '='*20)
-'''
+
