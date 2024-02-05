@@ -1,4 +1,4 @@
-import pandas
+import pandas, time
 import matplotlib.pyplot as plt
 from openpyxl import Workbook, load_workbook
 from openpyxl.drawing.image import Image
@@ -17,7 +17,7 @@ font_name = fm.FontProperties(fname=font_path).get_name()
 plt.rc('font', family=font_name)
 
 # csv 읽어오고 데이터 가져오기
-csvPath = r'D:\LSH\workspace\phthons\teamProject\인문50개.csv'
+csvPath = r'D:\LSH\workspace\phthons\teamProject\역사50개.csv'
 csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
 
 # 데이터 컨트롤(제목, 가격, e북가격, 등수)
@@ -44,7 +44,7 @@ for i in range(len(bTitle)):
         ratio = round(int(ePriceList[i])/int(priceList[i]), 3)
         ratioList.append(ratio)
 
-cate = '인문'
+cate = '역사'
 numbering = 50
 
 # 산포도 그리기(e북가격비율)
@@ -57,8 +57,8 @@ plt.tight_layout()  # 레이아웃 조정
 graphFileName1 = '{} {} {}.png'.format(cate, numbering, 'e북 가격 비율')
 graphList.append(graphFileName1)
 plt.savefig(graphFileName1)
-plt.show()
-
+plt.show(block=False)
+plt.close()
 
 #----------------------------------책과 등수---------------------------       
 #등수 추출
@@ -79,7 +79,8 @@ plt.ylabel('ranking in category')
 graphFileName2 = '{} {} {}.png'.format(cate, numbering, '책과 등수')
 graphList.append(graphFileName2)
 plt.savefig(graphFileName2)
-plt.show()
+plt.show(block = False)
+plt.close()
 
 #--------------------------------가격과 등수---------------------------------
 rankPureList = []
@@ -99,7 +100,8 @@ plt.ylabel('ranking in category')
 graphFileName3 = '{} {} {}.png'.format(cate, numbering, '가격과 등수')
 graphList.append(graphFileName3)
 plt.savefig(graphFileName3)
-plt.show()
+plt.show(block = False)
+plt.close()
 
 '''
 # 엑셀 파일로 변환
