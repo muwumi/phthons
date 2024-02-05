@@ -100,12 +100,16 @@ for j in range(endPage):
         baseList = []
         i = int(i)
         title = li[i].find('div', attrs={'class' : 'bookListItem_title__X7f9_'}).text
-        price = li[i].find_all('em')[0].text
+        price = int(li[i].find_all('em')[0].text.replace(',', ''))
         try :
-            ePrice = li[i].find_all('em')[1].text
+            ePrice = int(li[i].find_all('em')[1].text.replace(',', ''))
         except IndexError as e:
             ePrice = 'NO'
         rank = li[i].find('div', attrs={'class' : 'bookListItem_feature__txTlp'}).text
+        if  rank != '':
+            rank = li[i].find('div', attrs={'class' : 'bookListItem_feature__txTlp'}).text
+        else :
+            rank = 'NO'
         date = li[i].find('div', attrs={'class' : 'bookListItem_detail_date___byvG'}).text
         baseList = [title, price, ePrice, rank, date]
         dataList.append(baseList)
@@ -126,7 +130,7 @@ csvFileName = '{}{}개.csv'.format(inputCate, dataNum).replace('/', '')
 f = open(basePath+csvFileName, 'w', encoding='UTF-8-sig', newline='')
 writer = csv.writer(f, delimiter=',')
     #엑셀에 컬럼입력하기
-colList = '제목, 가격, e북가격, 연도, 등수'.split(', ')
+colList = '제목, 가격, e북가격, 등수, 연도'.split(', ')
 writer.writerow(colList)
 writer.writerows(dataList)
 #파일 저장
@@ -147,11 +151,12 @@ plt.rc('font', family=font_name)
 csvPath = basePath + csvFileName
 csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
 
-# 데이터 컨트롤(제목, 가격, e북가격, 등수)
 bTitle = csvDataFrame.loc[:, ['제목']]
+print(bTitle)
 price = csvDataFrame.loc[:, ['가격']]
 ePrice = csvDataFrame.loc[:, ['e북가격']]
 rank = csvDataFrame.loc[:, ['등수']]
+print(rank)
 
 bTitleList = bTitle['제목'].tolist()
 priceList = price['가격'].tolist()  
@@ -160,16 +165,21 @@ rankList = rank['등수'].str.replace('위', '').tolist()
 
 graphList = []
 
+#-----------------------------e북가격비율 분석
 #e북 가격 비율 만들기
 ratioList = []
 bTitleWithEbook = []
+print(ePriceList)
+print(type(ePriceList[0]))
 for i in range(len(bTitle)):
-    if type(ePriceList[i]) == type(1):
+    if ePriceList[i] != 'NO' and ePriceList[i] != '무료':
         #이북이 있는 타이틀만 추출
         bTitleWithEbook.append(bTitleList[i])
         #ratio추출
         ratio = round(int(ePriceList[i])/int(priceList[i]), 3)
         ratioList.append(ratio)
+print(ratioList)
+print(bTitleWithEbook)
 
 # 산포도 그리기(e북가격비율)
 plt.scatter(bTitleWithEbook, ratioList)
@@ -180,11 +190,9 @@ plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
 graphFileName1 = '{} {} {}.png'.format(inputCate.replace('/', ''), dataNum, 'e북 가격 비율')
 graphList.append(graphFileName1)
-
 plt.savefig(basePath + graphFileName1)
 plt.show(block = False)
-#plt.close()
-
+plt.close()
 
 #----------------------------------책과 등수---------------------------       
 #등수 추출
@@ -198,6 +206,8 @@ for i in range(len(bTitleList)):
         target = bTitleList[i]
         bTitlePureList.append(target)
 print('====================================등수추출==================================')        
+print(rankPureList)
+print(bTitlePureList)
 plt.scatter(bTitlePureList, rankPureList)
 plt.xlabel('book title')
 plt.ylabel('ranking in category')
@@ -206,7 +216,7 @@ graphFileName2 = '{} {} {}.png'.format(inputCate.replace('/', ''), dataNum, '책
 graphList.append(graphFileName2)
 plt.savefig(basePath + graphFileName2)
 plt.show(block = False)
-#plt.close()
+plt.close()
 
 #--------------------------------가격과 등수---------------------------------
 rankPureList = []
@@ -219,6 +229,7 @@ for i in range(len(bTitleList)):
         target = priceList[i]
         pricePureList.append(target)
 print('====================================등수가 있는 가격 추출==================================')        
+print(pricePureList)
 plt.scatter(pricePureList, rankPureList)
 plt.xlabel('paper book price')
 plt.ylabel('ranking in category')
@@ -227,7 +238,7 @@ graphFileName3 = '{} {} {}.png'.format(inputCate.replace('/', ''), dataNum, '가
 graphList.append(graphFileName3)
 plt.savefig(basePath + graphFileName3)
 plt.show(block = False)
-#plt.close()
+plt.close()
 
 # 엑셀 파일로 변환
 excelFileName = '{}{}.xlsx'.format(inputCate.replace('/', ''), dataNum)
@@ -239,7 +250,7 @@ workbook = load_workbook(excelPath)
 sheet = workbook.active
 
 # 시트 만들어서 저장
-for i in range(3):
+for i in range(len(graphList)):
     newSheet = workbook.create_sheet(title = 'graph{}'.format(int(i)+1))
     graphPath = basePath + graphList[i]
     image = Image(graphPath)

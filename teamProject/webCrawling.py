@@ -223,7 +223,6 @@ plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
 graphFileName1 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
 graphList.append(graphFileName1)
-
 plt.savefig(basePath + graphFileName1)
 plt.show(block = False)
 plt.close()
@@ -282,7 +281,7 @@ workbook = load_workbook(excelPath)
 sheet = workbook.active
 
 # 시트 만들어서 저장
-for i in range(3):
+for i in range(len(graphList)):
     newSheet = workbook.create_sheet(title = 'graph{}'.format(int(i)+1))
     graphPath = basePath + graphList[i]
     image = Image(graphPath)
