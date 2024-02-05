@@ -183,7 +183,7 @@ graphList.append(graphFileName1)
 
 plt.savefig(basePath + graphFileName1)
 plt.show(block = False)
-plt.close()
+#plt.close()
 
 
 #----------------------------------책과 등수---------------------------       
@@ -206,7 +206,7 @@ graphFileName2 = '{} {} {}.png'.format(inputCate.replace('/', ''), dataNum, '책
 graphList.append(graphFileName2)
 plt.savefig(basePath + graphFileName2)
 plt.show(block = False)
-plt.close()
+#plt.close()
 
 #--------------------------------가격과 등수---------------------------------
 rankPureList = []
@@ -227,7 +227,7 @@ graphFileName3 = '{} {} {}.png'.format(inputCate.replace('/', ''), dataNum, '가
 graphList.append(graphFileName3)
 plt.savefig(basePath + graphFileName3)
 plt.show(block = False)
-plt.close()
+#plt.close()
 
 # 엑셀 파일로 변환
 excelFileName = '{}{}.xlsx'.format(inputCate.replace('/', ''), dataNum)
