@@ -201,6 +201,7 @@ priceList = price['가격'].tolist()
 ePriceList = ePrice['e북가격'].tolist() 
 rankList = rank['등수'].str.replace('위', '').tolist()
 
+graphList = []
 
 #e북 가격 비율 만들기
 ratioList = []
@@ -220,15 +221,13 @@ plt.xlabel('book-title')
 plt.ylabel('ratio : ebook-price / paper-price')
 plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
-graphFileName = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
-plt.savefig(graphFileName)
-plt.show()
-plt.close()
+graphFileName1 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
+graphList.append(graphFileName1)
+plt.savefig(graphFileName1)
 
 
 #----------------------------------책과 등수---------------------------       
 #등수 추출
-print(len(bTitle))
 rankPureList = []
 bTitlePureList = []
 for i in range(len(bTitleList)):
@@ -240,11 +239,12 @@ for i in range(len(bTitleList)):
         bTitlePureList.append(target)
 print('====================================등수추출==================================')        
 plt.scatter(bTitlePureList, rankPureList)
+plt.xlabel('book title')
+plt.ylabel('ranking in category')
 plt.xticks(rotation=90)  # X 축 라벨 회전
-graphFileName2 = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, '책과 등수')
+graphFileName2 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, '책과 등수')
+graphList.append(graphFileName2)
 plt.savefig(graphFileName2)
-plt.show()
-plt.close()
 
 #--------------------------------가격과 등수---------------------------------
 rankPureList = []
@@ -261,10 +261,9 @@ plt.scatter(pricePureList, rankPureList)
 plt.xlabel('paper book price')
 plt.ylabel('ranking in category')
 plt.xticks(rotation=90)  # X 축 라벨 회전
-graphFileName3 = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, '가격과 등수')
+graphFileName3 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, '가격과 등수')
+graphList.append(graphFileName3)
 plt.savefig(graphFileName3)
-plt.show()
-plt.close()
 
 # 엑셀 파일로 변환
 excelFileName = '{}{}.xlsx'.format(inputCategory.replace('/', ''), dataNum)
@@ -275,24 +274,16 @@ csvDataFrame.to_excel(excelPath, index=False)
 workbook = load_workbook(excelPath)
 sheet = workbook.active
 
-# 이미지 파일 불러오기
-graphPath = basePath + graphFileName
-image1 = Image(graphPath)
-graphPath = basePath + graphFileName2
-image2 = Image(graphPath)
-graphPath = basePath + graphFileName3
-image3 = Image(graphPath)
-
-# 이미지 삽입할 위치 지정
-position1 = 'A{}'.format(dataNum+3)
-sheet.add_image(image1, position1)
-position2 = 'A{}'.format(dataNum+33)
-sheet.add_image(image2, position2)
-position3 = 'A{}'.format(dataNum+73)
-sheet.add_image(image3, position3)
-excelFileNameWithGraph = '{}{}with{}.xlsx'.format(inputCategory.replace('/', ''), dataNum, graphFileName.split('.')[0])
+# 시트 만들어서 저장
+for i in range(3):
+    newSheet = workbook.create_sheet(title = 'graph{}'.format(int(i)+1))
+    graphPath = basePath + graphList[i]
+    image = Image(graphPath)
+    position = 'A1'
+    newSheet.add_image(image , position)
+excelFileNameWithGraph = '{} {}with Graph.xlsx'.format(inputCategory.replace('/', ''), dataNum)
 workbook.save(excelFileNameWithGraph)
-
+'''
 #----------------------------------------------------이메일 보내기--------------------------------------------------
     #이메일 보내기
     #네이버에 접속
@@ -362,13 +353,16 @@ file_input.send_keys(os.path.abspath(basePath+excelFileNameWithGraph))
 wait = WebDriverWait(browser, 10)
 wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'file_upload_progress')))
 print('='*20, '첨부파일', '='*20)
-
+'''
 '''        #내용작성
 pyperclip.copy("내용을 담아봅시다람쥐")
 browser.find_element(By.CLASS_NAME, 'editor_body').click()
 time.sleep(1)
 browser.find_element(By.CLASS_NAME, 'editor_body').send_keys(Keys.CONTROL,'v')'''
+'''
+
 
         #전송버튼
 browser.find_element(By.CLASS_NAME, 'button_write_task').click()
 print('='*20, '전송하기', '='*20)
+'''

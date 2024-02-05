@@ -1,4 +1,4 @@
-import pandas as pd
+import pandas
 import matplotlib.pyplot as plt
 from openpyxl import Workbook, load_workbook
 from openpyxl.drawing.image import Image
@@ -6,6 +6,7 @@ import matplotlib.font_manager as fm
 import tkinter as tk
 from tkinter import ttk
 
+#----------------------------------------------------데이터 분석 작업--------------------------------------------------
 # 바탕글꼴 경로 설정
 font_path = 'C:/Windows/Fonts/batang.ttc'
 
@@ -16,8 +17,8 @@ font_name = fm.FontProperties(fname=font_path).get_name()
 plt.rc('font', family=font_name)
 
 # csv 읽어오고 데이터 가져오기
-csvPath = r'D:\LSH\workspace\phthons\teamProject\자기계발55개.csv'
-csvDataFrame = pd.read_csv(csvPath, sep=',', encoding='utf-8-sig')
+csvPath = r'D:\LSH\workspace\phthons\teamProject\인문50개.csv'
+csvDataFrame = pandas.read_csv(csvPath, sep=',', encoding='utf-8-sig')
 
 # 데이터 컨트롤(제목, 가격, e북가격, 등수)
 bTitle = csvDataFrame.loc[:, ['제목']]
@@ -30,6 +31,7 @@ priceList = price['가격'].tolist()
 ePriceList = ePrice['e북가격'].tolist() 
 rankList = rank['등수'].str.replace('위', '').tolist()
 
+graphList = []
 
 #e북 가격 비율 만들기
 ratioList = []
@@ -42,36 +44,41 @@ for i in range(len(bTitle)):
         ratio = round(int(ePriceList[i])/int(priceList[i]), 3)
         ratioList.append(ratio)
 
+cate = '인문'
+numbering = 50
+
 # 산포도 그리기(e북가격비율)
 plt.scatter(bTitleWithEbook, ratioList)
 plt.title('Scatter')
 plt.xlabel('book-title')
 plt.ylabel('ratio : ebook-price / paper-price')
-plt.xticks(rotation=90)  # X 축 라벨 회전
+#plt.xticks(rotation=90)  # X 축 라벨 회전
 plt.tight_layout()  # 레이아웃 조정
-graphFileName = '{}{}{}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
-plt.savefig(graphFileName)
+graphFileName1 = '{} {} {}.png'.format(cate, numbering, 'e북 가격 비율')
+graphList.append(graphFileName1)
+plt.savefig(graphFileName1)
 plt.show()
-plt.close()
 
 
-#----------------------------------책과 등수---------------------------
-print('====================================등수추출==================================')        
+#----------------------------------책과 등수---------------------------       
 #등수 추출
-print(len(bTitle))
 rankPureList = []
 bTitlePureList = []
 for i in range(len(bTitleList)):
     #카테고리가 일치하지 않는 불순물 필터링
-    if ('자기계발' == rankList[i].split(' ')[0]):
+    if (cate == rankList[i].split(' ')[0]):
         rankPureList.append(int(rankList[i].split(' ')[1]))
     #제목에서도 필터링
         target = bTitleList[i]
         bTitlePureList.append(target)
 print('====================================등수추출==================================')        
 plt.scatter(bTitlePureList, rankPureList)
-plt.xticks(rotation=90)  # X 축 라벨 회전
-plt.savefig('일치하는지 보자.png')
+plt.xlabel('book title')
+plt.ylabel('ranking in category')
+#plt.xticks(rotation=90)  # X 축 라벨 회전
+graphFileName2 = '{} {} {}.png'.format(cate, numbering, '책과 등수')
+graphList.append(graphFileName2)
+plt.savefig(graphFileName2)
 plt.show()
 
 #--------------------------------가격과 등수---------------------------------
@@ -79,20 +86,24 @@ rankPureList = []
 pricePureList = []
 for i in range(len(bTitleList)):
     #카테고리가 일치하지 않는 불순물 필터링
-    if ('자기계발' == rankList[i].split(' ')[0]):
+    if (cate == rankList[i].split(' ')[0]):
         rankPureList.append(int(rankList[i].split(' ')[1]))
     #제목에서도 필터링
         target = priceList[i]
         pricePureList.append(target)
-print('====================================등수추출==================================')        
+print('====================================등수가 있는 가격 추출==================================')        
 plt.scatter(pricePureList, rankPureList)
-plt.xticks(rotation=90)  # X 축 라벨 회전
-plt.savefig('일치하는지 보자2.png')
+plt.xlabel('paper book price')
+plt.ylabel('ranking in category')
+#plt.xticks(rotation=90)  # X 축 라벨 회전
+graphFileName3 = '{} {} {}.png'.format(cate, numbering, '가격과 등수')
+graphList.append(graphFileName3)
+plt.savefig(graphFileName3)
 plt.show()
 
-
+'''
 # 엑셀 파일로 변환
-excelPath = r'D:\LSH\workspace\phthons\teamProject\자기계발55개.xlsx'
+excelPath = r'D:\LSH\workspace\phthons\teamProject\여행66.xlsx'
 csvDataFrame.to_excel(excelPath, index=False)
 
 # 엑셀 파일 읽어오기
@@ -108,7 +119,7 @@ position = 'K2'
 sheet.add_image(image, position)
 
 workbook.save('자기계발55개 그래프추가.xlsx')
-
+'''
 '''
 #-----------------------------------------------데이터 색인-------------------------------------
 print('-'*50, '데이터 색인-------------------------------------')
