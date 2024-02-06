@@ -45,7 +45,7 @@ time.sleep(1)
 
 #스크롤 끝까지 내리기
 def scrollDownMax():
-    last_height = browser.execute_script("return document.documentElement.scrollHeight")
+    lastHeight = browser.execute_script("return document.documentElement.scrollHeight")
     while True :
         #스크롤 끝까지 내리기
         browser.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
@@ -54,13 +54,13 @@ def scrollDownMax():
         time.sleep(1)
 
         #스크롤 내린 후 페이지 높이
-        new_height = browser.execute_script("return document.documentElement.scrollHeight")
+        newHeight = browser.execute_script("return document.documentElement.scrollHeight")
         
         #더이상 스크롤이 내려가지 않을 때 까지 스크롤 내리는 반복문 멈추기
-        if new_height == last_height :
+        if newHeight == lastHeight :
             break
         #스크롤 내린 후 페이지 높이를 현재 페이지 높이 변수에 저장
-        last_height = new_height
+        lastHeight = newHeight
 scrollDownMax()
 
 #카테고리
