@@ -77,9 +77,9 @@ for i in range(len(cateTagList)):
 print(categories)
 
 #카테고리 선택하기
-print('카테고리를 입력하세요')
+print('=============================================카테고리를 입력하세요===============================================')
 inputCate = input()
-print('원하는 자료 개수를 입력하시오')
+print('========================================원하는 자료 개수를 입력하시오=============================================')
 dataNum = int(input())
 cateIdx = categories.index(inputCate)
 print(cateTagList[cateIdx])
@@ -113,12 +113,8 @@ for j in range(endPage):
         date = li[i].find('div', attrs={'class' : 'bookListItem_detail_date___byvG'}).text
         baseList = [title, price, ePrice, rank, date]
         dataList.append(baseList)
-        print('{}번 자료================================================='.format((j*40)+(i+1)))
-        print(title)
-        print(price)
-        print(ePrice)
-        print(rank)
-        print(date)
+        print('>>>>>>>>>{}번/{}목표 자료============'.format(len(dataList), dataNum))
+        print(dataList[len(dataList)-1])
         if len(dataList) == dataNum:
             print('==============>{}개의 자료를 다 채웠습니다'.format(len(dataList)) )
             break
