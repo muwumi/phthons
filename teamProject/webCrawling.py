@@ -6,7 +6,6 @@ import csv
 import requests
 import pyperclip
 import pandas
-import seaborn
 import matplotlib.pyplot as plt
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -14,14 +13,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
 from openpyxl import Workbook, load_workbook
 from openpyxl.drawing.image import Image
 import numpy
 import matplotlib.font_manager as fm
-import tkinter as tk
-from tkinter import ttk
-
+import statsmodels.api as sm
 
 
 #----------------------------------------------------크롤링 작업--------------------------------------------------
@@ -204,8 +200,8 @@ rankList = rank['등수'].str.replace('위', '').tolist()
 graphList = []
 
 #e북 가격 비율 만들기
-ratioList = []
-bTitleWithEbook = []
+ratioList = [] #y축
+bTitleWithEbook = [] #x축
 for i in range(len(bTitle)):
     if ePriceList[i] != ' ':
         #이북이 있는 타이틀만 추출
@@ -213,20 +209,21 @@ for i in range(len(bTitle)):
         #ratio추출
         ratio = round(int(ePriceList[i])/int(priceList[i]), 3)
         ratioList.append(ratio)
-
-# 산포도 그리기(e북가격비율)
-plt.scatter(bTitleWithEbook, ratioList)
-plt.title('Scatter')
-plt.xlabel('book-title')
-plt.ylabel('ratio : ebook-price / paper-price')
-plt.xticks(rotation=90)  # X 축 라벨 회전
-plt.tight_layout()  # 레이아웃 조정
+data = {'title' : bTitleWithEbook, 'ratio' : ratioList}
+df = pandas.DataFrame(data)
+avgVal = df['ratio'].mean()
+plt.scatter(df['title'], df['ratio'], color='blue')
+plt.axhline(y=avgVal, color = 'red', linestyle='--', label=f'전체평균: {avgVal:.3f}')
+plt.text(0.5, 0.9, f'전체평균: {avgVal:.3f}', transform=plt.gca().transAxes, fontsize=10, color='red')
+plt.xlabel('책 제목')
+plt.ylabel('e북 가격의 비율(종이책 가격 대비)')
+plt.title('e북 가격과 종이책 가격의 비율 분석')
+plt.legend()
 graphFileName1 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, 'e북 가격 비율')
 graphList.append(graphFileName1)
 plt.savefig(basePath + graphFileName1)
 plt.show(block = False)
 plt.close()
-
 
 #----------------------------------책과 등수---------------------------       
 #등수 추출
@@ -238,12 +235,11 @@ for i in range(len(bTitleList)):
         rankPureList.append(int(rankList[i].split(' ')[1]))
     #제목에서도 필터링
         target = bTitleList[i]
-        bTitlePureList.append(target)
-print('====================================등수추출==================================')        
+        bTitlePureList.append(target)        
 plt.scatter(bTitlePureList, rankPureList)
 plt.xlabel('book title')
 plt.ylabel('ranking in category')
-plt.xticks(rotation=90)  # X 축 라벨 회전
+plt.title('종이책과 등수')
 graphFileName2 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, '책과 등수')
 graphList.append(graphFileName2)
 plt.savefig(basePath + graphFileName2)
@@ -260,17 +256,27 @@ for i in range(len(bTitleList)):
     #제목에서도 필터링
         target = priceList[i]
         pricePureList.append(target)
-print('====================================등수가 있는 가격 추출==================================')        
-plt.scatter(pricePureList, rankPureList)
-plt.xlabel('paper book price')
-plt.ylabel('ranking in category')
-plt.xticks(rotation=90)  # X 축 라벨 회전
+data = {'X' : pricePureList, 'Y' : rankPureList}
+df = pandas.DataFrame(data)
+X = sm.add_constant(df['X'])
+Y = df['Y']
+model = sm.OLS(Y, X)
+results = model.fit()
+regResult = results.summary()
+print(regResult)
+plt.scatter(df['X'], df['Y'], label='실제 데이터')
+plt.plot(df['X'], results.predict(), color='red', label='회귀선')
+plt.xlabel('종이책 가격')
+plt.ylabel('등수')
+plt.legend()
+plt.title('종이책 가격과 등수 분석')
 graphFileName3 = '{} {} {}.png'.format(inputCategory.replace('/', ''), dataNum, '가격과 등수')
 graphList.append(graphFileName3)
 plt.savefig(basePath + graphFileName3)
 plt.show(block = False)
 plt.close()
 
+#엑셀로 저장하기
 # 엑셀 파일로 변환
 excelFileName = '{}{}.xlsx'.format(inputCategory.replace('/', ''), dataNum)
 excelPath = basePath + excelFileName
