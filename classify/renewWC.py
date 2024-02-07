@@ -167,7 +167,6 @@ for i in range(1, end_page + 1):
     browser.get(next_url)
     # 스크롤 내리기
     scroll_down_max()
-    print(next_url)
 
 # 파일 저장
 f.close()
