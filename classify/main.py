@@ -1,25 +1,14 @@
-import opt, scroller, crawling, analyzing, mailing
-import global_variation as gb
-from io import BytesIO
-import math
-import os
-import time
-import csv
-import requests
-import pyperclip
-import pandas as pd
-import matplotlib.pyplot as plt
+import opt
+import scroller
+import crawling
+import analyzing
+import mailing
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from openpyxl import Workbook, load_workbook
-from openpyxl.drawing.image import Image
-import numpy as np
-import matplotlib.font_manager as fm
-import statsmodels.api as sm
 
 #________________________________________웹에 접속_______________________________________
 browser = opt.web_setting()

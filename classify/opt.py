@@ -18,7 +18,6 @@ from openpyxl.drawing.image import Image
 import numpy as np
 import matplotlib.font_manager as fm
 import statsmodels.api as sm
-import global_variation as gv
 
 def web_setting():
     # 옵션설정

@@ -1,5 +1,4 @@
 import opt, scroller, crawling, analyzing, mailing
-import global_variation as gb
 from io import BytesIO
 import math
 import os
