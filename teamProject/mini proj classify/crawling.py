@@ -57,7 +57,7 @@ def choose_category(browser = webdriver.Chrome):
     print('===================================browser===================================')
     print('현재url : ', browser.current_url)
     print('잠시 대기')
-    return get_url_exc_page, input_category
+    return (get_url_exc_page, input_category)
 
 #_____________________스크랩________________________
 def crawl(browser = '', get_url_exc_page = '' ,input_category = ''):
@@ -126,7 +126,7 @@ def crawl(browser = '', get_url_exc_page = '' ,input_category = ''):
         # 스크롤 내리기
         scroller.scroll_down_max(browser)
 
-    return data_result_2d, base_path, csv_file_name, data_num
+    return (data_result_2d, base_path, csv_file_name, data_num)
 
 #______엑셀에 저장___________
 def exc_save(base_path='', csv_file_name='', data_result_2d=''):

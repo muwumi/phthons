@@ -11,10 +11,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+'''
+모든 메서드의 결과값은 튜플로 반환 : 데이터를 복수 이상 반환하기
+'''
 #________________________________________웹에 접속_______________________________________
 browser = opt.web_setting()
 scroller.scroll_down_max(browser[0])
 #__________________________________________크롤링________________________________________
+
     #카테고리 선택
 cate_result = crawling.choose_category(browser[0])
     #스크롤 내리기
