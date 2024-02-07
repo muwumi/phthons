@@ -124,24 +124,4 @@ def data_analyze(base_path='', csv_file_name='', input_category='', data_num='')
     plt.show(block=False)
     plt.close()
 
-    # 엑셀로 저장하기
-    # 엑셀 파일로 변환
-    excel_file_name = '{}{}.xlsx'.format(input_category.replace('/', ''), data_num)
-    excel_path = base_path + excel_file_name
-    csv_data_frame.to_excel(excel_path, index=False)
-
-    # 엑셀 파일 읽어오기
-    workbook = load_workbook(excel_path)
-    sheet = workbook.active
-
-    # 시트 만들어서 저장
-    for i in range(len(graph_list)):
-        new_sheet = workbook.create_sheet(title='graph{}'.format(int(i) + 1))
-        graph_path = base_path + graph_list[i]
-        image = Image(graph_path)
-        position = 'A1'
-        new_sheet.add_image(image, position)
-    excel_file_name_with_graph = '{} {}with Graph.xlsx'.format(input_category.replace('/', ''), data_num)
-    workbook.save(base_path + excel_file_name_with_graph)
-
-    return (excel_file_name_with_graph, )
+    return (csv_data_frame , graph_list)

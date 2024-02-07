@@ -59,7 +59,7 @@ def choose_category(browser = webdriver.Chrome):
     print('잠시 대기')
     return get_url_exc_page, input_category
 
-#_____________________스크랩________________________
+#____________________스크랩________________________
 def crawl(browser = '', get_url_exc_page = '' ,input_category = ''):
     data_result_2d = []  # 최종적으로 사용할 데이터 그릇(2차원 배열)
     print('=' * 50, '원하는 데이터의 갯수를 입력해주세요', '=' * 50)
@@ -69,7 +69,9 @@ def crawl(browser = '', get_url_exc_page = '' ,input_category = ''):
     # 슬래쉬를 경로로 인식하는 문제를 해결하기 위해 r과 replace함수 사용
     base_path = 'D:\\LSH\\workspace\\phthons\\teamProject\\'
     csv_file_name = '{}{}개.csv'.format(input_category, data_num).replace('/', '')
-    # 컬럼구성
+    f = open(base_path + csv_file_name, 'w', encoding='UTF-8-sig', newline='')
+    writer = csv.writer(f, delimiter=',')
+    # 엑셀에 컬럼입력하기
     col_list = '제목, 가격, e북가격, 연도, 등수'.split(', ')
     data_result_2d.append(col_list)
 
@@ -125,25 +127,21 @@ def crawl(browser = '', get_url_exc_page = '' ,input_category = ''):
         browser.get(next_url)
         # 스크롤 내리기
         scroller.scroll_down_max(browser)
-
-    return data_result_2d, base_path, csv_file_name, data_num
-
-#______엑셀에 저장___________
-def exc_save(base_path='', csv_file_name='', data_result_2d=''):
-    f = open(base_path + csv_file_name, 'w', encoding='UTF-8-sig', newline='')
-    writer = csv.writer(f, delimiter=',')
+        
+    
     # 파일 저장
     writer.writerows(data_result_2d)
     f.close()
     print('=' * 30, 'csv파일 저장', '=' * 30)
+    return data_result_2d, base_path, csv_file_name, data_num
 
 #_______google sheet에 저장____________________
-def gspread_fx(spreadsheet_url='', position='', data_result_2d=''):
+def gspread_fx(position='', data_result_2d=''):
     # json 파일이 위치한 경로를 값으로 줘야 합니다.
     json_file_path = r"D:\LSH\workspace\phthons\cred.json"
     gc = gspread.service_account(json_file_path)
+    spreadsheet_url = "https://docs.google.com/spreadsheets/d/178r_LNfWGecOdvy36ehlYTpKN_tx1wE6ecXx9VlFcF8/edit?usp=sharing"
     doc = gc.open_by_url(spreadsheet_url)
 
     worksheet = doc.worksheet("시트1")
-    worksheet.update(position, data_result_2d)
-    print('=' * 30, '구글시트에 저장', '=' * 30)
+    worksheet.update(position, data_result_2d) 
