@@ -21,7 +21,7 @@ import statsmodels.api as sm
 import scroller
 import gspread
 
-#______csv로 저장___________
+#______csv로 저장____________________
 def csv_save(base_path='', csv_file_name='', data_result_2d=''):
     f = open(base_path + csv_file_name, 'w', encoding='UTF-8-sig', newline='')
     writer = csv.writer(f, delimiter=',')
@@ -40,7 +40,7 @@ def gspread_fx(spreadsheet_url='', position='', data_result_2d=''):
     worksheet.update(position, data_result_2d)
     print('=' * 30, '구글시트에 저장', '=' * 30)
 
-#________excel로 저장_________________
+#________excel로 저장__________________________
 # 엑셀로 저장하기
 def exc_save(input_category='', base_path='', data_num='', csv_data_frame='', graph_list=''):
     # 엑셀 파일로 변환
