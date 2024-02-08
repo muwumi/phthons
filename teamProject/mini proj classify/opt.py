@@ -18,6 +18,7 @@ from openpyxl.drawing.image import Image
 import numpy as np
 import matplotlib.font_manager as fm
 import statsmodels.api as sm
+import scroller
 
 def web_setting():
     # 옵션설정
@@ -39,5 +40,7 @@ def web_setting():
     browser.get('https://search.shopping.naver.com/book/home')
     browser.page_source
     time.sleep(1)
+
+    scroller.scroll_down_max(browser)
 
     return (browser, )

@@ -36,7 +36,6 @@ def gspread_fx(spreadsheet_url='', position='', data_result_2d=''):
     json_file_path = r"D:\LSH\workspace\phthons\cred.json"
     gc = gspread.service_account(json_file_path)
     doc = gc.open_by_url(spreadsheet_url)
-
     worksheet = doc.worksheet("시트1")
     worksheet.update(position, data_result_2d)
     print('=' * 30, '구글시트에 저장', '=' * 30)
