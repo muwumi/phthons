@@ -34,10 +34,9 @@ def send_email(browser='', base_path='', excel_file_name_with_graph=''):
     elem.click()
     time.sleep(3 / 2)
         # 아이디 비번 입력
-    print('아이디 입력')
-    my_id = 'tkdgjs9528'  # input()으로 변경
-    print('비번 입력')
-    my_pwd = 'Nhalfturn0*'  # input()으로 변경
+    
+    my_id = input('아이디 입력 바람 : ')
+    my_pwd = input('비번 입력 바람 : ')
     pyperclip.copy(my_id)
     browser.find_element(By.ID, 'id').send_keys('xcv')
     browser.find_element(By.ID, 'id').send_keys(Keys.BACKSPACE)

@@ -25,18 +25,17 @@ import gspread
 def choose_category(browser = webdriver.Chrome):
     elem = browser.find_element(By.CLASS_NAME, 'category_list_category__DqGyx')
     category_list = elem.text.split('\n')
-    print('_' * 30, '이하 카테고리 목럭입니다.', '_' * 30)
+    print('_' * 30, '이하 카테고리 목록입니다.', '_' * 30)
     print(category_list)
     print('_' * 80)
-    print('원하는 카테고리를 <<위의 카테고리 종류>>를 참조하여 입력해주세요(복사붙여넣기)')
-    input_category = input()
+    input_category = input('원하는 카테고리를 <<위의 카테고리 종류>>를 참조하여 입력해주세요(복사붙여넣기) : ' )
     div = browser.find_elements(By.CLASS_NAME, 'bookCard_card_wrap__Tx4e0')
     div_idx = int(len(div))
-    print('보세요~~~~~~~~~~~div_idx ==================>', div_idx)
+    #print('보세요~~~~~~~~~~~div_idx ==================>', div_idx)
     xpath_idx = int(category_list.index(input_category)) + 1
-    print('xpath_idx===>', xpath_idx)
+    #print('xpath_idx===>', xpath_idx)
     xpath = '//*[@id="container"]/div/div[{}]/div/ul/li[{}]/a'.format(div_idx, xpath_idx)
-    print('xpath====>', xpath)
+    #print('xpath====>', xpath)
     # elem 덮어쓰기
     time.sleep(1)
     wait = WebDriverWait(browser, 20)
@@ -62,8 +61,8 @@ def choose_category(browser = webdriver.Chrome):
 #_____________________스크랩________________________
 def crawl(browser = '', get_url_exc_page = '' ,input_category = ''):
     data_result_2d = []  # 최종적으로 사용할 데이터 그릇(2차원 배열)
-    print('=' * 50, '원하는 데이터의 갯수를 입력해주세요', '=' * 50)
-    data_num = int(input())
+    msg = ('=' * 50, '원하는 데이터의 갯수를 입력해주세요', '=' * 50)
+    data_num = int(input(msg))
     end_page = math.ceil(data_num / 40)
     # 엑셀열기
     # 슬래쉬를 경로로 인식하는 문제를 해결하기 위해 r과 replace함수 사용
