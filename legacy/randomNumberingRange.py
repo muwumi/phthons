@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 
 def downFx(ranNum, a, b) :
-    result = ranNum/3
+    result = ranNum/13
     if a<= result <= b:
         return str(result).split('.')[0]
     else :
