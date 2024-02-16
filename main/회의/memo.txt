@@ -1,0 +1,28 @@
+CREATE SEQUENCE lognum_sequence
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+    CACHE 20;
+
+CREATE TABLE tbl_log (
+    phnum INT,
+    FOREIGN KEY (phnum) REFERENCES tbl_member(phnum),
+    lognum VARCHAR2(50) DEFAULT TO_CHAR(SYSDATE, 'YYMMDD') || '-' || TO_CHAR(lognum_sequence.NEXTVAL),
+    orderList VARCHAR2(50),
+    charge INT
+);
+
+
+tbl_member : 회원(비회원:0000번)
+	name : 이름
+	phnum : 전화번호 끝자리, 프라이머리키
+tbl_log : 주문내역
+	phnum : 포린키
+	lognum : YYMMDD-시퀀스
+	orderlist : 주문내역
+	charge : 비용
+tbl_menu : 메뉴에 필요한 재료
+	menu : 메뉴명
+tbl_stock : 재료의 재고
