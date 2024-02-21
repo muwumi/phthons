@@ -26,3 +26,6 @@ tbl_log : 주문내역
 tbl_menu : 메뉴에 필요한 재료
 	menu : 메뉴명
 tbl_stock : 재료의 재고
+
+insert into tbl_log (lognum, phnum, orderlist, charge)
+VALUES (TO_CHAR(SYSDATE, 'YYMMDD') || '-' || lognum_sequence.NEXTVAL, 7748, '빵, 면', 5000)
