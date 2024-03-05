@@ -10,8 +10,8 @@ df = pd.read_sql(query, con)
 
 #________________________________조인 쿼리문__________________________________________
 #1번 2번 테이블 선택
-tbl1 = 'tbl_menu_ingri'
-tbl2 = 'tbl_menu'
+tbl1 = 'tbl_order'
+tbl2 = 'tbl_user'
 
 #선택한 테이블에 들어가서 컬럼 전부 가져오기
 qr1 = "SELECT * FROM {}".format(tbl1)
@@ -75,6 +75,11 @@ while True:
     base_query = base_query + ' and {}={}'.format(col_name, col_val)
 df = pd.read_sql(base_query, con)
 print(df)
+
+#데이터 분석
+
+
+#결과물 엑셀로 저장
 
 # 연결 닫기
 con.close()
