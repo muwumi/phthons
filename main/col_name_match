@@ -1,0 +1,24 @@
+cate_id = 카테고리 코드
+cate_name = 카테고리 명
+ingri_id = 재료 코드
+ingri_name = 재료 명
+menu_use = 메뉴 판매 여부
+menu_price = 메뉴 가격
+menu_name = 메뉴 명
+menu_img = 메뉴 이미지
+menu_id = 메뉴 코드
+menu_cost = 메뉴 원가
+need_amount = 재료 소요량
+menu_ingri_seq = 재료소요순서(항상 블라인드)
+ph_num = 번호
+order_id = 주문 코드
+order_date = 주문 날짜
+menu_sale_price = 해당메뉴 총 판매가
+menu_count = 메뉴 선택 수량
+user_sex = 회원 성별
+user_level = 회원 등급
+user_id = 회원 코드
+user_birth = 회원 생일
+unique_num = 특수 코드
+regi_date = 가입 날짜
+
