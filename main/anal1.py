@@ -14,7 +14,10 @@ def anal1( df=()):
 
     #menu라는 컬럼을 df상 생성 : 10-1 ==> 아메리카노
     qdf['MENU'] = qdf['CATE_ID'] + '-' + qdf['MENU_ID'].astype(str)
-    
+    query=''
+    con=''
+    pd.read_sql(query, con)
+
     #세대 컬럼 생성
         # 현재 날짜 가져오기
     current_date = datetime.now()
@@ -82,6 +85,8 @@ def anal1( df=()):
                 data = qdf.groupby(col_name1[i])['MENU_SALE_PRICE'].sum().reset_index()
                 print(data)
                 title = '{}~{} {}  MENU_SALE_PRICE'.format(start_date, end_date, col_name1[i])
+                if col_name1[i] == 'USER_SEX':
+                    data[col_name1[i]] = data[col_name1[i]].replace({0: '여자', 1: '남자'})              
                 plt.bar(data[col_name1[i]], data['MENU_SALE_PRICE'])
                 plt.xlabel(col_name1[i])
                 plt.ylabel('MENU_SALE_PRICE')
@@ -95,6 +100,8 @@ def anal1( df=()):
                 data = qdf.groupby([col_name1[i], col_name2[j]])['MENU_SALE_PRICE'].sum().reset_index()
                 print(data)
                 title = '{}~{} {} {}  MENU_SALE_PRICE'.format(start_date, end_date, col_name1[i], col_name2[j])
+                if col_name1[i] == 'USER_SEX':
+                    data[col_name1[i]] = data[col_name1[i]].replace({0: '여자', 1: '남자'})
                 sns.barplot(x=col_name2[j], y='MENU_SALE_PRICE', hue=col_name1[i], data=data)
                 #plt.bar(data.apply(lambda row: f"{row[col_name1[i]]} {row[col_name2[j]]}", axis=1), data['MENU_SALE_PRICE'])
                 plt.xlabel(col_name2[j])
