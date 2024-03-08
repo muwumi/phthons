@@ -10,17 +10,14 @@ import seaborn as sns
 from openpyxl.drawing.image import Image
 from write_query import write_query
 
-def save_excel(anal_result=()):
+def save_excel(anal_result=(), start_date='', end_date=''):
     print('_______________________________________________________')
-    print('타입이 튜플일걸?=============>',type(anal_result))
-    print('이중배열로서[[d,t], [d,t], .....] 길이가 9일걸?================>',len(anal_result[0]))
     today_date = datetime.now().strftime("%Y%m%d")
     new_excel = openpyxl.Workbook()
-    new_excel.active['A1']='__________{}보고서 입니다._______'.format(today_date)
+    new_excel.active['A1']='__________{}~{}보고서 입니다._______'.format(start_date, end_date)
     new_excel.active['A2']='__________총판매액은 {}원 입니다_______'.format(anal_result[0][0][1])
     for i in range(len(anal_result[0])):
         if i==0:
-            print('처음으로 되돌아가는지 확인')
             continue
         title = anal_result[0][i][0]
         data = anal_result[0][i][1]
@@ -40,6 +37,7 @@ def save_excel(anal_result=()):
     # 엑셀 파일 저장
     file_title = "{} report.xlsx".format(today_date)
     new_excel.save(filename=file_title)
+    new_excel.close()
     print('엑셀파일이 저장되었습니다. 확인해보세요')
 
 

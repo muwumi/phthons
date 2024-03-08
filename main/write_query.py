@@ -11,7 +11,7 @@ def write_query():
     df = pd.read_sql(query, con)
 
     #________________________________조인 쿼리문__________________________________________
-    #1번 2번 테이블 선택
+    # 조인 대상인 1번 2번 테이블 선택
     print('테이블을 선택하세요')
     tbl1 = input()
     print('테이블을 선택하세요')
@@ -43,7 +43,7 @@ def write_query():
     uni_col = cols1.union(cols2)
 
     print('##################################################')    
-    #선택한 "테이블.컬럼" 세트 만들기
+    #선택한 "테이블.(점)컬럼" 세트 만들기
     inner_str1 = ''
     for i in range(len(filter_col)):
         add_str = "{}.{}, ".format(tbl1, filter_col[i])
@@ -63,19 +63,15 @@ def write_query():
     join_query = 'SELECT {} FROM {} INNER JOIN {} ON 1=1'.format(res_str, tbl1, tbl2)
     df = pd.read_sql(join_query, con)
     print(join_query)
-
-
-
 #___________________________________________________________________________________________________________________________
     
-
-
     # tbl_order 테이블인 경우에만 날짜 범위 적용
     if tbl1 == 'tbl_order' or tbl2 == 'tbl_order':# 특정 기간 선택 (예: '2024-01-01'부터 '2024-02-01'까지의 데이터)
         start_date = input('시작날짜를 입력하세요')
         end_date = input('종료날짜를 입력하세요')
         join_query = join_query + ' WHERE {}.order_date BETWEEN TO_DATE({}, \'YYYYMMDD\') AND TO_DATE({}, \'YYYYMMDD\')'.format('tbl_order', start_date, end_date)
 
+    #교집합(중복 컬림)이 두개이상일 경우를 고려한 자동화
     for i in range(len(inter_col)):
         add_query = ' AND {}.{} = {}.{}'.format(tbl1, inter_col[i], tbl2, inter_col[i])
         join_query = join_query + add_query
@@ -98,9 +94,8 @@ def write_query():
     #     elif age_group == '50대 이상':
     #         join_query += ' AND EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM user_birth) + 1 >= 50'
 
-    #조인된 테이블에서 데이터 추출하기
+    #조인된 테이블에서 특정 컬럼에 해당하는 데이터 추출하기
     base_query = 'SELECT * FROM ({}) WHERE 1=1'.format(join_query)
-
     while True:
         col_name = input('col_name 입력하시오')
         if col_name=='':
