@@ -14,9 +14,9 @@ def anal1( df=()):
 
     #menu라는 컬럼을 df상 생성 : 10-1 ==> 아메리카노
     qdf['MENU'] = qdf['CATE_ID'] + '-' + qdf['MENU_ID'].astype(str)
-    query=''
-    con=''
-    pd.read_sql(query, con)
+    # query=''
+    # con=''
+    # pd.read_sql(query, con)
 
     #세대 컬럼 생성
         # 현재 날짜 가져오기
