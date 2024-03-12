@@ -24,6 +24,8 @@ END;
 
 #____________________CREATE TBL_ORDER DUMMY DATA___________________________________________ 
 
+
+#테스트로 들어간 데이터를 지워야 정상작동
 BEGIN
     FOR i IN 1..10000 LOOP
         INSERT INTO tbl_order(order_date, order_id, ph_num, menu_count, cate_id, menu_id) 
@@ -42,6 +44,8 @@ BEGIN
         );
     END LOOP;
 END;
+
+
 
 # menu_sale_price의 값은 처음에 입력하지 않고, 이후에 계산해주는 절차를 한번 걸쳐서 넣는다.
 

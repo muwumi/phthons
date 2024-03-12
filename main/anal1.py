@@ -5,7 +5,7 @@ import write_query
 from datetime import datetime
 
 #____________________________________________자동 데이터 분석 시스템______________________________________________________
-def anal1( df=()):
+def anal1( df=(), con=''):
     qdf = df[0]
     tbl1 = df[1]
     tbl2 = df[2]
@@ -14,6 +14,7 @@ def anal1( df=()):
 
     #menu라는 컬럼을 df상 생성 : 10-1 ==> 아메리카노
     qdf['MENU'] = qdf['CATE_ID'] + '-' + qdf['MENU_ID'].astype(str)
+    
     # query=''
     # con=''
     # pd.read_sql(query, con)

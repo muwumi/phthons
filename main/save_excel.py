@@ -16,6 +16,10 @@ def save_excel(anal_result=(), start_date='', end_date=''):
     new_excel = openpyxl.Workbook()
     new_excel.active['A1']='__________{}~{}보고서 입니다._______'.format(start_date, end_date)
     new_excel.active['A2']='__________총판매액은 {}원 입니다_______'.format(anal_result[0][0][1])
+    full_df = anal_result[1]
+    for row_data in dataframe_to_rows(full_df, index=False, header=True):
+            new_excel.active.append(row_data)
+            
     for i in range(len(anal_result[0])):
         if i==0:
             continue
@@ -35,7 +39,7 @@ def save_excel(anal_result=(), start_date='', end_date=''):
         # print(data)
 
     # 엑셀 파일 저장
-    file_title = "{} report.xlsx".format(today_date)
+    file_title = "{}({}~{}) report.xlsx".format(today_date, start_date, end_date)
     new_excel.save(filename=file_title)
     new_excel.close()
     print('엑셀파일이 저장되었습니다. 확인해보세요')
