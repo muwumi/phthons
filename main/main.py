@@ -13,9 +13,10 @@ end_date = df[4]'''
 '''anal1_result = anal1(df, con)'''
 start_day = '2023-01-01'
 end_day = '2024-01-31'
-anal1_result = analyze(con=con, start_date_str=start_day, end_date_str=end_day)
+analy_check='1,0,1,0,1,0,1,0,1'
+anal_result = analyze(con=con, start_date_str=start_day, end_date_str=end_day, analy_check=analy_check)
 # #엑셀로 저장
-save_excel(anal1_result, start_date=start_day, end_date=end_day)
+save_excel(anal_result, start_date=start_day, end_date=end_day)
 #db접속 차단
 con.close()
 print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>끝')

@@ -1,34 +1,19 @@
-# import matplotlib.pyplot as plt
-# import numpy as np
+import matplotlib.pyplot as plt
 
-# # 데이터 준비
-# categories = ['Americano', 'Latte', 'Cappuccino']
-# male_values = [30, 45, 20]
-# female_values = [25, 35, 30]
+# 데이터 생성 (예시 데이터)
+x_values = [1, 2, 3, 4, 5]
+y_values = [10, 12, 5, 8, 6]
 
-# # 막대 그래프 생성
-# bar_width = 0.35  # 각 막대의 너비
-# index = np.arange(len(categories))  # 각 카테고리의 인덱스
+# 꺾은 선 그래프 그리기
+plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Line Plot')
 
-# plt.bar(index, male_values, width=bar_width, label='Male', color='blue')
-# plt.bar(index + bar_width, female_values, width=bar_width, label='Female', color='red')
+# 그래프 제목과 축 레이블 설정
+plt.title('Line Plot Example')
+plt.xlabel('X-axis Label')
+plt.ylabel('Y-axis Label')
 
-# # 그래프에 제목과 축 레이블 추가
-# plt.title('Coffee Purchase by Gender')
-# plt.xlabel('Coffee Types')
-# plt.ylabel('Purchase Quantity')
+# 범례 표시
+plt.legend()
 
-# # 카테고리 레이블 설정
-# plt.xticks(index + bar_width / 2, categories)
-
-# # 범례 추가
-# plt.legend()
-
-# # 그래프 보여주기
-# plt.show()
-
-from datetime import datetime
-
-
-today_date = datetime.now().strftime("%Y%m%d")
-print(today_date)
+# 그래프 보여주기
+plt.show()
