@@ -38,7 +38,7 @@ def analyze(con='', start_date_str='', end_date_str='', analy_check=''):
     end_date = pd.to_datetime(end_date_str) + pd.Timedelta(days=1)
     filtered_df = merged_df[(merged_df['ORDER_DATE'] >= start_date) & (merged_df['ORDER_DATE'] <= end_date)]
     #성별 표시하기
-    filtered_df['USER_SEX'] = filtered_df['USER_SEX'].replace({0: '여자', 1: '남자'})
+    filtered_df['USER_SEX'] = filtered_df['USER_SEX'].replace({0: '여자', 1: '남자', 3: 'N/A'})
     #카테 이름 표시하기
     filtered_df['CATE_ID'] = filtered_df['CATE_ID'].replace({'10': '커피', '20': '논커피 라떼', '30': '스무디', '40': '티'})  
     # print(filtered_df)
