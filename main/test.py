@@ -1,19 +1,11 @@
-import matplotlib.pyplot as plt
+import pandas as pd
 
-# 데이터 생성 (예시 데이터)
-x_values = [1, 2, 3, 4, 5]
-y_values = [10, 12, 5, 8, 6]
+# 딕셔너리를 사용하여 데이터프레임 생성
+data =     {'cate_id':[10, 20, 30], 'cate_name':['커피', '논커피', '에이드']}
 
-# 꺾은 선 그래프 그리기
-plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Line Plot')
+df = pd.DataFrame(data)
+result = {10:'커피', 20:'논커피', 30:'에이드'}
+result_dict = dict(zip(df['cate_id'], df['cate_name']))
+print(result_dict)
 
-# 그래프 제목과 축 레이블 설정
-plt.title('Line Plot Example')
-plt.xlabel('X-axis Label')
-plt.ylabel('Y-axis Label')
-
-# 범례 표시
-plt.legend()
-
-# 그래프 보여주기
-plt.show()
+print(df['cate_name'])

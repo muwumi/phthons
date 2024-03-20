@@ -34,5 +34,5 @@ if __name__ == "__main__":
     analy_check =sys.argv[3] 
     # analy_check = '1,0,0,1,1,0,1,1,0'
     # start_day = '2023-01-01'
-    # end_day = '2023-01-31'
+    # end_day = '2023-03-20'
     main(start_day, end_day, analy_check)

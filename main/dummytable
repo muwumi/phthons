@@ -45,6 +45,29 @@ BEGIN
     END LOOP;
 END;
 
+#이걸로 수정함이 타당하다고 봄 240319
+BEGIN
+    FOR i IN 1..5000 LOOP
+        DECLARE
+            selected_cate_id NUMBER;
+        BEGIN
+            SELECT cate_id
+            INTO selected_cate_id
+            FROM (SELECT cate_id FROM tbl_menu ORDER BY DBMS_RANDOM.VALUE)
+            WHERE ROWNUM = 1;
+            
+            INSERT INTO tbl_order(order_date, order_id, ph_num, menu_count, cate_id, menu_id) 
+            VALUES(
+                TO_DATE('20190101', 'YYYYMMDD') + TRUNC(DBMS_RANDOM.VALUE(1, TO_DATE('20240305', 'YYYYMMDD') - TO_DATE('20200101', 'YYYYMMDD'))),
+                order_seq.nextval,
+                (SELECT ph_num FROM (SELECT ph_num FROM tbl_user ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1),
+                ROUND(DBMS_RANDOM.VALUE(1, 5)),
+                selected_cate_id,
+                (SELECT menu_id FROM (SELECT menu_id FROM tbl_menu WHERE cate_id = selected_cate_id ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1)
+            );
+        END;
+    END LOOP;
+END;
 
 
 # menu_sale_price의 값은 처음에 입력하지 않고, 이후에 계산해주는 절차를 한번 걸쳐서 넣는다.
