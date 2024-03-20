@@ -41,9 +41,10 @@ def analyze(con='', start_date_str='', end_date_str='', analy_check=''):
     filtered_df['USER_SEX'] = filtered_df['USER_SEX'].replace({0: '여자', 1: '남자', 3: 'N/A'})
     #카테 이름 표시하기
     cate_name = dict(zip(cate_df['CATE_ID'], cate_df['CATE_NAME']))
+    print('============================>>>>><><><><><', cate_name)
     filtered_df['CATE_ID'] = filtered_df['CATE_ID'].replace(cate_name)
         #데이터 프레임을 이용해 replace 인자도 변수화 및 자동화가 가능할 것으로 보임  
-    # print(filtered_df)
+    print(filtered_df)
 # 
     #데이터 분석
     #그래프 폰트 설정

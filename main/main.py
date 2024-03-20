@@ -29,10 +29,10 @@ def main(start_day, end_day,analy_check):
     return result_set_list, filtered_df
 
 if __name__ == "__main__":
-    start_day = sys.argv[1]  # 첫 번째 인수로 시작 날짜 받기
-    end_day = sys.argv[2]    # 두 번째 인수로 끝 날짜 받기
-    analy_check =sys.argv[3] 
-    # analy_check = '1,0,0,1,1,0,1,1,0'
-    # start_day = '2023-01-01'
-    # end_day = '2023-03-20'
+    # start_day = sys.argv[1]  # 첫 번째 인수로 시작 날짜 받기
+    # end_day = sys.argv[2]    # 두 번째 인수로 끝 날짜 받기
+    # analy_check =sys.argv[3] 
+    analy_check = '1,0,0,1,1,0,1,1,0'
+    start_day = '2023-01-01'
+    end_day = '2023-03-20'
     main(start_day, end_day, analy_check)
